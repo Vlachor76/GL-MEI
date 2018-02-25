@@ -56,9 +56,9 @@ class Cita_model extends CI_Model {
 
     
 
-    function eliminar_cita($id_cita){
+    function eliminar_cita($id_cita,$observacion){
         $fechault = date('Y-m-d H:i:s', time());
-        $this->db->update('citas',array('estado' => 'E','fecha_ult' => $fechault), array('id_cita' => $id_cita));
+        $this->db->update('citas',array('estado' => 'E','fecha_ult' => $fechault,'observa' => $observacion), array('id_cita' => $id_cita));
     }
 
     // Funcion que obtiene las citas creadas

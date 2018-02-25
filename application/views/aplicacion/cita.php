@@ -147,6 +147,7 @@
 											<option value="C">Confirmado</option>
 											<option value="X">Inasistio</option>
 											<option value="W">Esperando</option>
+											<option value="N">Novedades</option>
 										</select>
 									</label>
 									<label>Medio

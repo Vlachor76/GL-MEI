@@ -246,6 +246,7 @@ class Cita extends CI_Controller {
             $id_area = $_REQUEST["lugar"];
             $correo = $_REQUEST["correo"];
             $id_cita = $_REQUEST["idUnicoCita"];
+            $observacionEliminar = $_REQUEST["observacionEliminar"];
             $cita = array(
                             'primer_nombre' => $primerNombre,
                             'segundo_nombre' => $segundoNombre,
@@ -319,7 +320,7 @@ class Cita extends CI_Controller {
 
         if($_POST["accion"] == 'delete'){
             $id_cita = $_REQUEST["idUnicoCita"]; 
-            $this->cita_model->eliminar_cita($id_cita);
+            $this->cita_model->eliminar_cita($id_cita,$observacionEliminar);
             echo "OK";
         }
 
