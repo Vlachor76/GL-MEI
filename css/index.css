@@ -1,0 +1,46 @@
+body {
+	font-family: 'Nexa_Light';
+  }
+  
+.logo {
+	width: 40%;
+	float: left;
+	text-align: center;
+}
+.logo img{
+	width: 100%;
+}
+.formulario input, select{
+	width: 100%;
+	float: left;
+	height: 33px;
+	padding: 8px;
+	border: none;
+	border-bottom: solid 2px rgba(0,0,0, 0.3);
+	margin-bottom: 5px;
+	background: rgba(255,255,255, 0);
+}
+
+#cuerpo{
+	padding: 5%;
+}
+.formulario, .logo{
+	padding: 10px;
+}
+.formulario{
+	float: left;
+	padding: 50px;
+	padding-top: 100px;
+}
+.formulario{
+	width: 60%;
+}
+.formulario button{
+	padding: 7px;
+	padding-left: 20px;
+	padding-right: 20px;
+	background: #B61F24;
+	color: #FFF;
+	border: none;
+	cursor: pointer;
+}

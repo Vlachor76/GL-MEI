@@ -1,0 +1,31 @@
+.inputLargos{
+	width: 100%;
+	height: 32px;
+	padding: 8px;
+	margin-bottom: 8px;
+	border: solid 1px rgba(0,0,0, .5);
+}
+
+.numerosSesiones{
+	width: 50px;
+	height: 50px;
+	padding: 8px;
+	margin-bottom: 8px;
+	border: solid 1px rgba(0,0,0, .5);
+}
+
+.textArea{
+	width: 100%;
+	padding: 8px;
+	margin-bottom: 8px;
+	border: solid 1px rgba(0,0,0, .5);
+}
+.botonesModal{
+	padding: 7px;
+	padding-left: 20px;
+	padding-right: 20px;
+	background: #E78B30;
+	color: #FFF;
+	border: none;
+	cursor: pointer;
+} 

@@ -1,0 +1,120 @@
+#selectorLugares{
+	width: 180px;
+	height: 32px;
+	padding: 8px;
+}
+
+#sedeSeleccionada{
+	width: 180px;
+	height: 32px;
+	padding: 8px;
+}
+
+form #fechaGrilla{
+	float: right;
+	width: 170px;
+	height: 32px;
+	padding: 8px;
+}
+form button{
+	padding: 8px;
+	max-height: 32px;
+	background: #B61F24;
+	color: #FFF;
+	border: none;
+}
+
+/* colunmas una a una la grilla */
+.hora{
+	border: solid 1px rgba(255,255,255, 0.1);
+	width: 50px;
+	text-align: center;
+	padding: 2px;
+	width: 5%;
+}
+.telefono{
+	border: solid 1px rgba(255,255,255, 0.1);
+	width: 110px;
+	padding: 2px;
+	width: 10%;
+}
+.datos_adicionales{
+	border: solid 1px rgba(0,0,0, .1);
+	padding: 2px;
+	width: 150px;
+}
+
+.paciente{
+	border: solid 1px rgba(255,255,255, 0.1);
+	width: 200px;
+	padding: 2px;
+	width: 24%;
+}
+.tipo{
+	border: solid 1px rgba(255,255,255, 0.1);
+	width: 80px;
+	padding: 2px;
+	width: 4%;
+}
+.grupo{
+	background: rgba(0,0,0, 1);
+	display: inline-flex;
+	color: #FFF;
+	width: 100%;
+	text-align: center;
+}
+.espacio{
+	width: 1%;
+	background: #FFF;
+
+}
+.prof{
+	padding: 2px;
+	width: 4%;
+}
+.grup{
+	display: inline-flex;
+	width: 100%;
+	text-align: center;
+}
+.grup .hora, .paciente, .telefono, .tipo, .espacio, .prof{
+	border: solid 1px rgba(0,0,0, .1);
+	padding: 3px;
+}
+.grup .prof{
+	cursor: pointer;
+}
+.espacio{
+	border: none;
+	background: #E6E6E6;
+}
+.grup a{
+	text-decoration: none;
+	color: rgba(0,0,0, .6);
+}
+
+
+.formularios input, select{
+	background: rgba(255,255,255, 0);
+}
+
+
+.formularios{
+	width: 100%;
+	font-size: 13px;
+	color: rgba(0,0,0, .7);
+}
+
+.formularios label{
+	width: 33%;
+	float: left;
+	padding: 2px;
+}
+
+.formularios label input, select{
+	width: 100%;
+	height: 32px;
+	padding: 8px;
+	margin-bottom: 8px;
+	border: solid 1px rgba(0,0,0, .5);
+}

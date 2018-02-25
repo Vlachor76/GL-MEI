@@ -1,0 +1,47 @@
+form{
+    background: #E6E6E6;
+    display: inline-block;
+    width: 100%;
+    padding: 8px;
+}
+form label{
+    width: 20%;
+    padding: 1px;
+    float: left;
+}
+form label input, select{
+    width: 100%;
+    height: 30px;
+    border: none;
+    padding: 3px;
+}
+
+form h4{
+    width: 100%;
+    background: #FFF;
+    padding: 5px;
+}
+form label div{
+    height: 30px;
+}
+form .datos label{
+    width: 50%;
+    float: left;
+}
+form .datos label textarea{
+    width: 100%;
+    padding: 5px;
+}
+form .datos{
+    margin-top: 5px;
+}
+.datos .svitales label{
+    width: 20%;
+    float: left;
+    padding: 2px;
+}
+.datos .svitales label input{
+    width: 100%;
+    border: solid 1px rgba(0,0,0, .3);
+    height: 28px;
+}
