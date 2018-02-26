@@ -49,6 +49,7 @@ class Cita_model extends CI_Model {
     // Funcion obtiene los lugares de  cada sede
     function get_lugares_sede($id_sede) {
         $this->db->where('id_sede =', $id_sede);
+        $this->db->order_by('id_lugar_sede ', "ASC");
         $query = $this->db->get('lugares');
         return $query->result();
     }

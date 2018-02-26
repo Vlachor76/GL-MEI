@@ -138,6 +138,8 @@
 											<option value="BQ">Bloqueado, no dar citas varios</option>
 											<option value="CM">Consulta Medica</option>
 											<option value="CR">Consulta Revisión</option>
+											<option value="TT">Tratamiento</option>
+											<option value="EV">Consulta Evaluacion</option>
 										</select>
 									</label>
 									<label>Estado
@@ -147,7 +149,9 @@
 											<option value="C">Confirmado</option>
 											<option value="X">Inasistio</option>
 											<option value="W">Esperando</option>
+											<option value="P">Pendiente</option>
 											<option value="N">Novedades</option>
+											<option value="R">Revisión</option>
 										</select>
 									</label>
 									<label>Medio

@@ -431,12 +431,6 @@ function validarFormularioModal(){
         $('#primerApellido').focus();
         return false;		
     } 
-    if($('#fechaNacimiento').val() == ""){
-        alertify.set('notifier','position', 'top-center');
-        alertify.error("Determine fecha Nacimiento");
-        $('#fechaNacimiento').focus();
-        return false;		
-    } 
     return true;
 }
 
