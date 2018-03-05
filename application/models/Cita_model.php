@@ -125,7 +125,7 @@ class Cita_model extends CI_Model {
         $this->db->where('id_area =', $id_area);
         $this->db->where('hora =', $hora);
         $this->db->where('estado !=', 'E');
-        $query = $this->db->get('ceu_citas');
+        $query = $this->db->get('citas');
         return $query->row();
     }
 
@@ -153,7 +153,7 @@ class Cita_model extends CI_Model {
         $this->db->where('fecha  >=', $fechaInicio);
         $this->db->where('fecha  <=', $fechaFinal);
         $this->db->where('estado =', 'E');
-        $query = $this->db->get('ceu_citas');
+        $query = $this->db->get('citas');
         return $query->result();  
     }
 

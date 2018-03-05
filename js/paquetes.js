@@ -25,6 +25,41 @@ function showModalNuevoPaquete(){
 }
 
 
+function showModalEliminarPaquete(){   
+    var idPaquete = $('#idPaquete').val();
+    if(idPaquete!=0){ 
+     $('#modalEliminarPaquete').modal('show')
+    } 
+}
+
+function eliminarPaquete(){
+if($('#observacionEliminarP').val() == ""){
+    alertify.set('notifier','position', 'top-center');
+    alertify.error("Ingrese Una Motivo Valida");             
+    $('#observacionEliminarP').focus();
+    return;	
+} 
+var confirmar=confirm("Estas Seguro de Eliminar El Paquete"); 
+if (confirmar) { 
+    $.ajax({
+        method: "POST",
+        url: "./paquete/eliminar_paquete_unico",
+        data: { idpaquete:$('#paqAdquiridos').val(),
+        observacionEliminar: $('#observacionEliminarP').val()}, 
+        context: document.body})
+        .done(function(data) {  
+          if(data.trim() == "OK"){
+            alertify.set('notifier','position', 'top-center');
+            alertify.success("Se realizo la Operacion Con Exito");
+            consultarPaquetesPaciente(0);
+            $('#modalEliminarPaquete').modal('hide');
+          }
+    });
+}else{
+    $('#modalEliminarPaquete').modal('hide');
+} 
+} 
+
 
 
 function showModalInformes(){

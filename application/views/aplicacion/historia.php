@@ -73,7 +73,7 @@
         </select>
     </label>
     <label>Documento
-        <input type="number" id="documento" name="documento" placeholder="">
+        <input type="text" id="documento" name="documento" placeholder="">
     </label>
     <label>Sexo
         <div id="sexo"> </div>
