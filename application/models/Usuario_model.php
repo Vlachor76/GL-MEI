@@ -34,7 +34,7 @@ class Usuario_model extends CI_Model {
 
      // Funcion que retorna los datos del usuario segun id o falso si no existe
      function get_usuario($cedula) {
-        $this->db->select('ceu_usuario.*', FALSE);
+        $this->db->select('usuario.*', FALSE);
         $this->db->where('documento', $cedula);
         $query = $this->db->get('usuario');
         if ($query->num_rows() == 1) {

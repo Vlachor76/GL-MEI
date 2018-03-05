@@ -71,7 +71,7 @@
         </select>
     </label>
     <label>Documento
-        <input type="number" id="documento" name="documento" placeholder="">
+        <input type="text" id="documento" name="documento" placeholder="">
     </label>
     <label>Sexo
         <div id="sexo"> </div>
@@ -94,7 +94,7 @@
                 <select id="tipo_antescedentes" >
                         <option value="personales">Personales</option>
                         <option value="familiares">Familiares</option>
-                        <option value="qx">Quirúrgicos</option>
+                        <option value="quirurgico">Quirúrgicos</option>
                         <option value="toxicologicos">Toxicológicos</option>
                         <option value="toxicoalergicos">Toxico-alergicos</option>
                         <option value="esquema">Esquema de vacunación</option>

@@ -78,9 +78,43 @@ class Historia extends CI_Controller {
      function consultar_historia() {
         $numero = $this->input->post('documento');
         $tipodoc = $this->input->post('tipodoc');
-        $historia = $this->historia_model->get_historia($tipodoc,$numero);
-        $evoluciones = $this->historia_model->get_evoluciones($tipodoc,$numero);
-        echo  json_encode(array('historia' => $historia , 'evoluciones' => $evoluciones));
+        $historias = $this->historia_model->get_historia($tipodoc,$numero);
+        $evoluciones = array();
+        $contador = 0;
+        $resultado_evoluciones = $this->historia_model->get_evoluciones($tipodoc,$numero);
+        foreach ($resultado_evoluciones as $value) {
+            $evoluciones[$contador] =  $value;
+            $contador ++;
+        }
+        
+        foreach ($historias as $historia) {
+            $wrapper_evolucion = (object) array('id_evolucion' => $historia->id_historia,
+                                    'tipodoc' => $historia->tipodoc,
+                                    'ndoc' => $historia->documento,
+                                    'codiag' => $historia->codiag,
+                                    'coproc' => '',
+                                    'evol' => $this->obtener_texto_historia($historia),
+                                    'fecha_registro' => $historia->fecha,
+                                    'id_sede' => $historia->id_sede,                             
+                                    'id_usuario' => $historia->id_usuario,
+                                    'psips' => $historia->psips);
+            $evoluciones[$contador] = $wrapper_evolucion;
+            $contador ++ ;
+        }
+        
+        echo  json_encode(array('historia' => $historias[0] , 'evoluciones' => $evoluciones));
+    }
+    
+     // Funcion que  construye el texto para mostrar la historia
+    function obtener_texto_historia($historiaTemporal){
+        $textoHistoria = "Nota Medica:". $historiaTemporal->id_usuario."\n\n";    
+        $textoHistoria = $textoHistoria."Motivo : ". $historiaTemporal->motivo."\n";     
+        $textoHistoria = $textoHistoria."Revisi贸n : ". $historiaTemporal->revision."\n";
+        $textoHistoria = $textoHistoria."Examen Fisico : ". $historiaTemporal->examen."\n";
+        $textoHistoria = $textoHistoria."Signos Vitales : ". $historiaTemporal->signos."\n";
+        $textoHistoria = $textoHistoria."Diagnostico : ". $historiaTemporal->diagnostico."\n";
+        $textoHistoria = $textoHistoria."Conducta: ". $historiaTemporal->conducta."\n";
+        return $textoHistoria;
     }
 
     // Funcion que guarda crea la historia clinica del paciente
@@ -89,8 +123,8 @@ class Historia extends CI_Controller {
         $tipodoc = $this->input->post('tipodoc');
         $historia = $this->historia_model->get_historia($tipodoc,$numero);
 
-        if(isset($historia->documento)){
-            echo  json_encode(array('historia' => 'TRUE' , 'signos' => $historia->signos));
+        if(isset($historia[0]->documento)){
+            echo  json_encode(array('historia' => 'TRUE' , 'signos' => $historia[0]->signos));
         }else{
             echo  json_encode(array('historia' => 'FALSE' , 'signos' => ''));
         }

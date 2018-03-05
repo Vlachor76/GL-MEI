@@ -51,7 +51,7 @@
 						<option value="MS">MS</option>
 						<option value="AS">AS</option>
 					</select>
-					<input type="number" id="ndoc" name="ndoc" placeholder="Nro. Documento">
+					<input type="text" id="ndoc" name="ndoc" placeholder="Nro. Documento">
 					<input type="text" id="nombre1" name="nombre1" placeholder="1er. nombre">
 					<input type="text" id="nombre2" name="nombre2"  placeholder="2do. Nombre">
 					<input type="text" id="apellido1" name="apellido1"  placeholder="1er. Apellido">

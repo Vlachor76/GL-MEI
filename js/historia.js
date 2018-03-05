@@ -2,7 +2,7 @@
   var objetoAntescedentes = {
     "personales" : "ninguno",
     "familiares" : "ninguno",
-    "qx" : "ninguno",
+    "quirurgico" : "ninguno",
     "toxicologicos" : "ninguno",
     "esquema" : "ninguno",
     "traumaticos" : "ninguno",

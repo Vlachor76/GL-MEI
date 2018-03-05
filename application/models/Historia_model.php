@@ -35,8 +35,9 @@ class Historia_model extends CI_Model {
     function get_historia($tipodoc,$numero) {
         $this->db->where('tipoDoc', $tipodoc);
         $this->db->where('documento', $numero);
+        $this->db->order_by('fecha', 'DESC');
         $query = $this->db->get('historia');
-        return $query->row();
+        return $query->result();
     }
 
     // Funcion que obtiene las evoluciones de un paciente
