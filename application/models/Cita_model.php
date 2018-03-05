@@ -55,11 +55,19 @@ class Cita_model extends CI_Model {
     }
 
 
+    // Funcion que elimina todos los datos de la tabla reservas
+    function eliminar_reservas($id_sede) {
+        $this->db->where('id_sede =', $id_sede);
+        $this->db->delete('edicion');
+    }
     
 
-    function eliminar_cita($id_cita,$observacion){
+    function eliminar_cita($id_cita,$observacionEliminar){
         $fechault = date('Y-m-d H:i:s', time());
-        $this->db->update('citas',array('estado' => 'E','fecha_ult' => $fechault,'observa' => $observacion), array('id_cita' => $id_cita));
+        $usuario =  $this->session->userdata('usuario');
+        $this->db->update('citas',
+            array('estado' => 'E','fecha_ult' => $fechault ,'usult' =>  $usuario,'observa'=>$observacionEliminar), 
+            array('id_cita' => $id_cita));
     }
 
     // Funcion que obtiene las citas creadas
@@ -74,6 +82,7 @@ class Cita_model extends CI_Model {
         $query = $this->db->get();
         return $query->result();
     }
+
 
     // Funcion que obtiene las citas creadas para el informe de excel
     function get_citas_excel($fecha,$id_area,$id_sede) {
@@ -97,7 +106,7 @@ class Cita_model extends CI_Model {
         return $query->result();
     }
 
-    // Funcion get tipos consulta
+    // Funcion verfica la edicion 
     function verificar_reserva($id_sede,$id_area,$fecha,$hora) {
         $this->db->select('id_reserva');
         $this->db->where('fecha =', $fecha);
@@ -105,6 +114,18 @@ class Cita_model extends CI_Model {
         $this->db->where('id_area =', $id_area);
         $this->db->where('hora =', $hora);
         $query = $this->db->get('edicion');
+        return $query->row();
+    }
+
+
+    // Funcion verifica la citas
+    function verificar_cita($id_sede,$id_area,$fecha,$hora) {
+        $this->db->where('fecha =', $fecha);
+        $this->db->where('id_sede =', $id_sede);
+        $this->db->where('id_area =', $id_area);
+        $this->db->where('hora =', $hora);
+        $this->db->where('estado !=', 'E');
+        $query = $this->db->get('ceu_citas');
         return $query->row();
     }
 
@@ -122,8 +143,19 @@ class Cita_model extends CI_Model {
         if($documento != ""){
             $this->db->where('nro_documento =', $documento);
         }
-        $query = $this->db->get('citas',7);
+        $query = $this->db->get('citas');
         return $query->result();
         
     }
+
+    // Funcion que obtiene las citas eliminadas de un rango especifico
+    function get_citas_eliminadas($fechaInicio,$fechaFinal) {     
+        $this->db->where('fecha  >=', $fechaInicio);
+        $this->db->where('fecha  <=', $fechaFinal);
+        $this->db->where('estado =', 'E');
+        $query = $this->db->get('ceu_citas');
+        return $query->result();  
+    }
+
+    
 }

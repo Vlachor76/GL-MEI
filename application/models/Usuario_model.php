@@ -22,6 +22,7 @@ class Usuario_model extends CI_Model {
 
     // Funcion que retorna los datos del usuario segun el usuario
     function validar($usuario) {
+        $this->db->select('usuario.*', FALSE);
         $this->db->where('usuario', $usuario);
         $query = $this->db->get('usuario');
         if ($query->num_rows() == 1) {

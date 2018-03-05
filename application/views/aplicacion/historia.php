@@ -9,7 +9,7 @@
     <!-- Lib Ext css -->
 	<link href="<?php echo base_url(); ?>ext_libraries/bootstrap/bootstrap_3_3_7.min.css" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>ext_libraries/alertify/alertify.css">
-
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <!-- Customs CSS -->
     <link rel="stylesheet" type="text/css" href="css/style.css"> 
     <link rel="stylesheet" type="text/css" href="css/historia.css">
@@ -41,6 +41,7 @@
     <input type="hidden" id="id_sede" name="id_sede"   value="<?php echo $this->session->userdata('id_sede'); ?>">
     <input type="hidden" name="signos" id="signos"  value="">
     <input type="hidden" name="antecedentes" id="antecedentes"  value="">
+    <input type="hidden" name="examen" id="examen"  value="">
     <label>
         Fecha
         <input type="date" id="fActual"  placeholder="">
@@ -56,6 +57,7 @@
         <div id="edad"> </div>
     </label>
     <label>FN
+    <button type="button" title="Exportar Historias" onclick="showModalInformes();" style=" margin-left: 200px;" class="botonesModal icon-grid"></button>
         <div id="fn"> </div>
     </label>
     <label>Tipo Documento
@@ -71,7 +73,7 @@
         </select>
     </label>
     <label>Documento
-        <input type="text" id="documento" name="documento" placeholder="">
+        <input type="number" id="documento" name="documento" placeholder="">
     </label>
     <label>Sexo
         <div id="sexo"> </div>
@@ -94,7 +96,7 @@
                 <select id="tipo_antescedentes" >
                         <option value="personales">Personales</option>
                         <option value="familiares">Familiares</option>
-                        <option value="quirurgico">Quirúrgicos</option>
+                        <option value="qx">Quirúrgicos</option>
                         <option value="toxicologicos">Toxicológicos</option>
                         <option value="toxicoalergicos">Toxico-alergicos</option>
                         <option value="esquema">Esquema de vacunación</option>
@@ -128,13 +130,13 @@
                         <option value="Dorso">Dorso</option>
                         <option value="Neurologico">Neurológico</option>
                         <option value="Piel">Piel</option>
-                        <option value="faneras">faneras</option>
+                        <option value="Faneras">faneras</option>
                         <option value="Otros">Otros</option>
                 </select>
             </label>
         </div>
         <label>
-            <textarea id="examen" name="examen"></textarea>
+            <textarea id="examen_tem" ></textarea>
         </label>
         <label>
         <div class="svitales">
@@ -159,7 +161,7 @@
         <div class="svitales">
             <label>Diagnostico Ppl</label>
             <label>
-                <select id="tipo_diag" name="tipo_diagnostico" >
+                <select  id="tipo_diag" name="tipo_diagnostico" >
                     <option value="0">---</option>
                     <option value="impresion">Impresión Diagnóstica</option>
                     <option value="confirmadoN">Confirmado Nuevo</option>
@@ -168,10 +170,10 @@
             </label>
             <label>Codigo</label>
             <label>
-                <input type="text" name="codiag" value="" placeholder="">
+                <input type="text" class="diag" name="codiag" id="codiag" placeholder="">
             </label>
         </div>
-            <textarea name="diagnostico"></textarea>
+            <textarea name="diagnostico"  id="diagnostico"></textarea>
         </label>
         <label>Medicamentos
             <textarea id="medicamentos"></textarea>
@@ -179,23 +181,28 @@
         <label>
         <div class="svitales">
             <label>Diagnostico 2
-                <input type="text" name="codiag2" value="" placeholder="">
+                <input type="text" class="diag" name="codiag2" value="" placeholder="">
             </label>
             <label>Diagnostico 3
-                <input type="text" name="codiag3" value="" placeholder="">
+                <input type="text" class="diag" name="codiag3" value="" placeholder="">
             </label>
             <label>Diagnostico 4
-                <input type="text" name="codiag4" value="" placeholder="">
+                <input type="text" class="diag" name="codiag4" value="" placeholder="">
             </label>
         </div>
             <textarea name="diagnostico2"></textarea>
         </label>
         <div style="width: 100%; border-bottom: solid 1px #000; float: left;"></div>
         <label>Conducta De Entrada Y Tratamiento
-            <textarea name="conducta"></textarea>
+            <textarea style="margin-top: 19px;" name="conducta"></textarea>
         </label>
-        <label>Procedimiento
-            <textarea name="procedimiento"></textarea>
+        <label><div class="svitales">
+            <label>Procedimiento</label>
+            <label>
+            <input type="text" name="coproc" class="proc" id="procehistoria">
+            </label>
+        </div>
+            <textarea name="procedimiento" id="procedimientoHistoria"></textarea>
         </label>
         <label> <br> 
             <button type="button" title="Ver Valoración" class="consultarValoracion botonesModal icon-airplay"></button>
@@ -208,10 +215,10 @@
         <div class="svitales" >
             <label>EVOLUCION</label>
             <label class="notasoap">Diagnostico
-                <input type="text" id="diagevol" >
+                <input type="text"  class="diag" id="diagevol" >
             </label>
             <label class="notasoap" >Procedimiento
-                <input type="text" id="proceevol">
+                <input type="text"  class="proc" id="proceevol">
             </label>
         </div>
             <textarea id="evolucion" rows="10" ></textarea>
@@ -300,10 +307,32 @@
         </div>
 	</div>
 
+
+    	<!-- Modal Exportar Historia-->
+	<div class="modal fade" id="modalExportHistoria" role="dialog" style="padding: 10px;">
+		<div class="modal-dialog modal-md">
+		  <!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Exportar Informes Historia</h4>
+				</div>
+				<div class="modal-body">
+						Fecha Inicio
+							<input type="date" style="height: 30px;" id="fechaInicioHistoria" placeholder="">					
+						Fecha Fin
+							<input type="date" style="height: 30px;" id="fechaFinalHistoria" placeholder="">
+						<button type="button" title="Exportar Historia" onclick="exporHistoriaExcel();" style="margin-top: 20px;" class="botonesModal icon-file-text"></button>
+				</div>
+			</div>  
+		</div>
+    </div>
+
     <!-- Lib core JavaScript -->
 	<script src="<?php echo base_url(); ?>ext_libraries/jquery/jquery_3_2_1.min.js"></script>
     <script src="<?php echo base_url(); ?>ext_libraries/bootstrap/bootstrap_3_3_7.min.js"></script>
     <script src="<?php echo base_url(); ?>ext_libraries/alertify/alertify.js"></script>	
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <!-- Customs JavaScript -->
     <script src="<?php echo base_url(); ?>js/historia.js"></script>
     <script src="<?php echo base_url(); ?>js/pacientes.js"></script>

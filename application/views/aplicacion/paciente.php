@@ -143,6 +143,9 @@
 							<button id="registrarpaciente" type="button" class="icon-save" title="Registrar"></button>
 							<button id="valorarPaciente" data-toggle="modal" data-target="#modalValoracion" type="button" class="icon-clipboard" title="Valoracion"></button>
 					<?php } ?>
+					<?php if($this->session->userdata('rol') == "6") {  ?>
+						<button type="button" title="Cambiar Identificación" onclick="cambiarIdentificacion();"><span class="icon-refresh-ccw"></span></button>
+					<?php } ?>
 					<button type="button" title="Exportar Citas" onclick="exportarPacientes();"><span class="icon-grid"></span></button>
 							<button id="limpiarFormPacientes" type="button" onclick="" class="icon-file" title="Limpiar Formulario"></button>
 				</fieldset>				
@@ -200,6 +203,30 @@
 			</div>  
 		</div>
     </div>
+
+
+	<!-- Modal Cambio Identificacion Paciente-->
+	<div class="modal fade" id="modalCambioIdentidad" role="dialog" style="padding: 10px;">
+		<div class="modal-dialog modal-md">
+		  <!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Cambiar Identidad</h4>
+				</div>
+				<div class="modal-body">
+					<form  accept-charset="utf-8" style="padding: 0;">
+						Doc Actual
+							<input type="text" id="documentoActual" style="height: 30px;" disabled value="">					
+						Doc Nuevo
+							<input type="text" style="height: 30px;" id="documentoNuevo" placeholder="">
+						<button type="button" title="Cambiar Identidad" onclick="cambiarIdentidad();" style="margin-top: 20px;" class="botonesModal icon-check-circle"></button>									
+					</form>
+				</div>
+			</div>  
+		</div>
+    </div>
+
 
     <!-- Lib core JavaScript -->
 	<script src="<?php echo base_url(); ?>ext_libraries/jquery/jquery_3_2_1.min.js"></script>

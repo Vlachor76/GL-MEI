@@ -1,15 +1,34 @@
 
+
+
+
   var objetoAntescedentes = {
     "personales" : "ninguno",
     "familiares" : "ninguno",
-    "quirurgico" : "ninguno",
+    "quirurgicos" : "ninguno",
     "toxicologicos" : "ninguno",
     "esquema" : "ninguno",
     "traumaticos" : "ninguno",
     "infecciosos" : "ninguno",
     "ginecoobstetricos" : "ninguno",
     "otros" : "ninguno"
-}
+  }
+
+  var objetoExamen = {
+    "Estado" : "clinicamente normal",
+    "Cabeza" : "clinicamente normal",
+    "Cara" : "clinicamente normal",
+    "Orofaringe" : "clinicamente normal",
+    "Cuello" : "clinicamente normal",
+    "Extremidades" : "clinicamente normal",
+    "Torax" : "clinicamente normal",
+    "Abdomen" : "clinicamente normal",
+    "Dorso" : "clinicamente normal",
+    "Neurologico" : "clinicamente normal",
+    "Piel" : "clinicamente normal",
+    "Faneras" : "clinicamente normal",
+    "Otros" : "clinicamente normal"
+  }
 
 var sesionesUsuario ;
 var indexSesionUsuario;
@@ -41,7 +60,7 @@ $(document).ready(function() {
             $('#signos').val(signos);
             $('#antecedentes').val(JSON.stringify(objetoAntescedentes));   
             var tipo_examen = $('#tipo_examen').val();
-            $('#examen').val(tipo_examen+"|"+$('#examen').val());
+            $('#examen').val(JSON.stringify(objetoExamen));  
             $.post($('#formhistoria').attr("action"),$('#formhistoria').serialize(),
             function(data, status){
                 alertify.set('notifier','position', 'top-center');
@@ -54,7 +73,66 @@ $(document).ready(function() {
         }    
 
     });
+ 
+    $( ".diag" ).autocomplete({
+        source: function( request, response ) {
+        $.ajax( {
+            url: "./administracion/obtener_diagnosticos",
+            dataType: "json",
+            data: {
+            term: request.term
+            },
+            success: function( data ) {
+            response( data );
+            }
+        } );
+        },
+        minLength: 2,
+        select: function( event, ui ) {
+            llenarCampoDesripcionAutomcompletador(ui.item.label,this);
+        }
+    } );
 
+    $( ".proc" ).autocomplete({
+        source: function( request, response ) {
+        $.ajax( {
+            url: "./administracion/obtener_procedimientos",
+            dataType: "json",
+            data: {
+            term: request.term
+            },
+            success: function( data ) {
+            response( data );
+            }
+        } );
+        },
+        minLength: 1,
+        select: function( event, ui ) {
+            llenarCampoDesripcionAutomcompletador(ui.item.label,this);
+        }
+    } );
+
+    function llenarCampoDesripcionAutomcompletador(texto,objeto){
+        if(objeto.id=="procehistoria"){
+            $( "#procedimientoHistoria" ).val(texto);
+        }
+        if(objeto.id=="codiag"){
+            $( "#diagnostico" ).val(texto);
+        }
+        if(objeto.id=="diagevol"){
+            var textoEvolucion = $( "#evolucion" ).val();
+            textoEvolucion = textoEvolucion +"\nDIAGNOSTICO EVOLUCION : "+texto;
+            $( "#evolucion" ).val(textoEvolucion);
+        }
+
+        if(objeto.id=="proceevol"){
+            var textoEvolucion = $( "#evolucion" ).val();
+            textoEvolucion = textoEvolucion +"\nPROCEDIMIENTO EVOLUCION : "+texto;
+            $( "#evolucion" ).val(textoEvolucion);
+        }
+        
+    }
+     
 
     /**
      * Funcion para registrar un nuevo evolucion  
@@ -106,7 +184,7 @@ $(document).ready(function() {
         var stringSesionTem  = "";
         if(sesionesUsuario.length != 0 ){
         var sesionTemporal = sesionesUsuario[indexSesionUsuario] ; 
-        stringSesionTem = sesionTemporal.fecha_registro + "\n"+sesionTemporal.evol
+        stringSesionTem = sesionTemporal.fecha + "\n"+sesionTemporal.evol
         }
         $('#evoluciones').val(stringSesionTem);
         
@@ -221,12 +299,29 @@ $(document).ready(function() {
           objetoAntescedentes[tipo_antescedentes]= $('#ant_temporal').val();
      });
 
+
+      /**
+       * Va agregando los examenes del pacientes
+       */
+      $( "#examen_tem" ).change(function() { 
+        var tipo_examen = $('#tipo_examen').val();
+        objetoExamen[tipo_examen]= $('#examen_tem').val();
+   });
+
      /**
        * consulta los antecedentes agregados
        */
       $( "#tipo_antescedentes" ).change(function() { 
         var tipo_antescedentes = $('#tipo_antescedentes').val();
         $('#ant_temporal').val(objetoAntescedentes[tipo_antescedentes]);
+   });
+
+   /**
+       * consulta los examenes agregados
+       */
+      $( "#tipo_examen" ).change(function() { 
+        var tipo_examen = $('#tipo_examen').val();
+        $('#examen_tem').val(objetoExamen[tipo_examen]);
    });
 
 
@@ -247,7 +342,7 @@ $(document).ready(function() {
             var respuesta = JSON.parse(data);
             if(respuesta.historia == 'TRUE'){  
                 $('#divhistoria').hide();
-                 if(permisos == "NOTA_INICIAL"){
+                if(permisos == "NOTA_INICIAL"){
                     respuesta.signos = respuesta.signos +"\n\n"+
                     "SUBJETIVO:\n"+
                     "OBJETIVO:\n"+
@@ -259,56 +354,18 @@ $(document).ready(function() {
             }  
         });
       }
-      
-      /**
-       * Autocompletador de procedimientos 
-       
-      var availableTags = [
-        "Rock",
-        "Rap",
-        "Trova",
-        "Blues",
-        "Country",
-        "Folk",
-        "Jass",
-        "POP",
-        "Electronic"
-      ];
-      $( "#tags" ).autocomplete({
-        source: availableTags
-      });
-
-      $( "#tags" ).keyup(function( event ) {
-        var procedimiento = $("#tags").val();
-        if(procedimiento.length > 1){
-            $.post('./administracion/obtener_procedimientos',{procedimiento:$( "#tags" ).val()},
-        function(data, status){
-            var respuesta = JSON.parse(data);
-            var nombres = respuesta.nombre;
-            $( "#tags" ).autocomplete({
-                source: nombres
-            });
-        });
-        }
-        
-      });
-
-      $("#search-box").keyup(function(){
-		$.ajax({
-		type: "POST",
-		url: "./administracion/obtener_procedimientos",
-		data:'procedimiento='+$(this).val(),
-		success: function(data){
-            var respuesta = JSON.parse(data);
-			$("#suggesstion-box").show();
-			$("#suggesstion-box").html(respuesta);
-			$("#search-box").css("background","#FFF");
-		 }
-		});
-    });
-    */
-
 });
+
+
+function showModalInformes(){
+    $('#modalExportHistoria').modal('show');
+}
+
+function exporHistoriaExcel(){
+    var feini = $("#fechaInicioHistoria").val();
+    var fefin = $("#fechaFinalHistoria").val();
+    location.href="./historia/export_excel_historia?feini="+feini+"&fefin="+fefin
+}
 
 
 

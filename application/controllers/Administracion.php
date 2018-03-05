@@ -78,13 +78,49 @@ class Administracion extends CI_Controller {
     
 
      /**
-     * function obtener_paquetes
+     * function obtener_procedimientos
      *
      * Funcion consulta los procedimientos
      *
      */
     function obtener_procedimientos() {
-        $resultadoPaquetes = $this->administracion_model->get_paquetes(); 
-         echo json_encode($resultadoPaquetes);
+        $cod_proc = $_REQUEST["term"];
+        $resultadoProcedimientos = $this->administracion_model->get_procedimientos($cod_proc);
+        $procedimientos = array();
+        $contador=0;
+        foreach ($resultadoProcedimientos as $row) {
+            $objetoTemporal = (object) array(   'id' => $row->codigo,
+                                                'label' => $row->procedi,
+                                                'value' => $row->codigo);
+        $procedimientos[$contador] = $objetoTemporal;
+        $contador++;
+        }
+        echo json_encode($procedimientos);
         } 
-}
+
+    /**
+     * function obtener_diagnosticos
+     *
+     * Funcion consulta los diagnosticos
+     *
+     */
+    function obtener_diagnosticos() {
+        $cod_diag = $_REQUEST["term"];
+        $resultadoDiagnosticos = $this->administracion_model->get_diagnosticos($cod_diag);
+        $diagnosticos = array();
+        $contador=0;
+        foreach ($resultadoDiagnosticos as $row) {
+            $objetoTemporal = (object) array(   'id' => $row->codconsult,
+                                                'label' => $row->diag,
+                                                'value' => $row->codconsult);
+        $diagnosticos[$contador] = $objetoTemporal;
+        $contador++;
+        }
+        echo json_encode($diagnosticos);
+    }
+
+
+
+
+
+    }

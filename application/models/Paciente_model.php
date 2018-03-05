@@ -54,6 +54,12 @@ class Paciente_model extends CI_Model {
         $this->db->update('paciente', $valoracion, array('ndoc' => $cedula));
     }
 
+    
+
+    // Funcion que cambia la identificacion de un paciente
+    function cambiar_identificacion($documentoActual, $documentoNuevo) {
+        $this->db->update('paciente',  array('ndoc' => $documentoNuevo), array('ndoc' => $documentoActual));
+    }
 
     // Funcion que retorna la valoracion de un paciente
     function get_valoracion($numero,$tipodoc) {
@@ -63,6 +69,11 @@ class Paciente_model extends CI_Model {
         $query = $this->db->get('paciente');
         return $query->row();
     }
+
+    // Funcion que registra el cambio de identificacion
+    function insertar_cambio_identificacion($cambioIdentificacion) {
+        $this->db->insert('cambios_identificacion', $cambioIdentificacion);
+    } 
     
 
 }

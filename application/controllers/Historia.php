@@ -20,6 +20,7 @@ class Historia extends CI_Controller {
         $this->is_logged_in();
         $this->load->helper('url');
         $this->load->model('historia_model');
+        $this->load->helper('mysql_to_excel_helper');
         $this->load->model('administracion_model');
         date_default_timezone_set("America/Bogota");
     }
@@ -54,21 +55,26 @@ class Historia extends CI_Controller {
      // Funcion que guarda crea la historia clinica del paciente
      function crear_historia() {
         $historia =  $_POST;
-        $antecedentes = $historia["antecedentes"]; 
-        $antecedentes =  str_replace("{\"","",$antecedentes);
-        $antecedentes = str_replace("\":\""," = ",$antecedentes);
-        $antecedentes = str_replace("\",\"","\n",$antecedentes);
-        $antecedentes = str_replace("\"}","",$antecedentes);
-        $historia["antecedentes"] = $antecedentes;
-        $historia['psips'] =$this->session->userdata('rol');
+        $historia["antecedentes"] = $this->replace_json($historia["antecedentes"]);
+        $historia["examen"] = $this->replace_json($historia["examen"]);
+        $historia["psips"] = $this->session->userdata('rol');
         $this->historia_model->crear_historia($historia);
         echo "OK";
+    }
+
+
+    function replace_json($objeto_json){
+        $srt =  str_replace("{\"","",$objeto_json);
+        $srt = str_replace("\":\""," = ",$srt);
+        $srt = str_replace("\",\"","\n",$srt);
+        $srt = str_replace("\"}","",$srt);
+        return $srt;
     }
 
     // Funcion que guarda la evolucion del paciente
     function ingresar_evolucion() {
         $evolucion =  $_POST;
-        $evolucion['psips'] =$this->session->userdata('rol');
+        $evolucion["psips"] = $this->session->userdata('rol');
         $this->historia_model->ingresar_evolucion($evolucion);
         echo "OK";
     }
@@ -86,7 +92,6 @@ class Historia extends CI_Controller {
             $evoluciones[$contador] =  $value;
             $contador ++;
         }
-        
         foreach ($historias as $historia) {
             $wrapper_evolucion = (object) array('id_evolucion' => $historia->id_historia,
                                     'tipodoc' => $historia->tipodoc,
@@ -94,7 +99,7 @@ class Historia extends CI_Controller {
                                     'codiag' => $historia->codiag,
                                     'coproc' => '',
                                     'evol' => $this->obtener_texto_historia($historia),
-                                    'fecha_registro' => $historia->fecha,
+                                    'fecha' => $historia->fecha,
                                     'id_sede' => $historia->id_sede,                             
                                     'id_usuario' => $historia->id_usuario,
                                     'psips' => $historia->psips);
@@ -104,12 +109,12 @@ class Historia extends CI_Controller {
         
         echo  json_encode(array('historia' => $historias[0] , 'evoluciones' => $evoluciones));
     }
-    
-     // Funcion que  construye el texto para mostrar la historia
-    function obtener_texto_historia($historiaTemporal){
+
+      // Funcion que  construye el texto para mostrar la historia
+      function obtener_texto_historia($historiaTemporal){
         $textoHistoria = "Nota Medica:". $historiaTemporal->id_usuario."\n\n";    
         $textoHistoria = $textoHistoria."Motivo : ". $historiaTemporal->motivo."\n";     
-        $textoHistoria = $textoHistoria."Revisi贸n : ". $historiaTemporal->revision."\n";
+        $textoHistoria = $textoHistoria."Revisión : ". $historiaTemporal->revision."\n";
         $textoHistoria = $textoHistoria."Examen Fisico : ". $historiaTemporal->examen."\n";
         $textoHistoria = $textoHistoria."Signos Vitales : ". $historiaTemporal->signos."\n";
         $textoHistoria = $textoHistoria."Diagnostico : ". $historiaTemporal->diagnostico."\n";
@@ -117,7 +122,7 @@ class Historia extends CI_Controller {
         return $textoHistoria;
     }
 
-    // Funcion que guarda crea la historia clinica del paciente
+    // Funcion que consulta si el paciente tiene historia 
     function tiene_historia() {
         $numero = $this->input->post('numero');
         $tipodoc = $this->input->post('tipodoc');
@@ -129,6 +134,29 @@ class Historia extends CI_Controller {
             echo  json_encode(array('historia' => 'FALSE' , 'signos' => ''));
         }
     }
+
+    
+
+    /**
+     * function export_excel_historia
+     *
+     * Funcion export_excel_historia exporta a excel las historias de una rango de fechas
+     *
+     */
+    function export_excel_historia() {
+        $feini = $_REQUEST["feini"];
+        $fefin = $_REQUEST["fefin"];
+
+        $resultado_sesiones_paquete = $this->historia_model->historia_informe_excel($feini,$fefin); 
+
+        $fields = array("fecha","tipodoc","ndoc","nombres","apellidos","sexo","edad","reside",
+                        "codubi","municipio","codrips","tipocons");
+        $nombre_archivo="historia_".$feini."_".$fefin;
+
+        to_excel($fields, $resultado_sesiones_paquete , $nombre_archivo);
+
+
+    } 
 
 
 }

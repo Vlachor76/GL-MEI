@@ -82,20 +82,20 @@ class Cita extends CI_Controller {
      *
      */
     function getcitas() {
-      $horasDias = array(
-     "07:00","07:15","07:30","07:45",
-     "08:00","08:15","08:30","08:45",
-     "09:00","09:15","09:30","09:45",
-     "10:00","10:15","10:30","10:45",
-     "11:00","11:15","11:30","11:45",
-     "12:00","12:15","12:30","12:45",
-     "13:00","13:15","13:30","13:45",
-     "14:00","14:15","14:30","14:45",
-     "15:00","15:15","15:30","15:45",
-     "16:00","16:15","16:30","16:45",
-     "17:00","17:15","17:30","17:45",
-     "18:00","18:15","18:30","18:45",
-     "19:00","19:15","19:30","19:45");
+        $horasDias = array(
+            "07:00","07:15","07:30","07:45",
+            "08:00","08:15","08:30","08:45",
+            "09:00","09:15","09:30","09:45",
+            "10:00","10:15","10:30","10:45",
+            "11:00","11:15","11:30","11:45",
+            "12:00","12:15","12:30","12:45",
+            "13:00","13:15","13:30","13:45",
+            "14:00","14:15","14:30","14:45",
+            "15:00","15:15","15:30","15:45",
+            "16:00","16:15","16:30","16:45",
+            "17:00","17:15","17:30","17:45",
+            "18:00","18:15","18:30","18:45",
+            "19:00","19:15","19:30","19:45");
 
         $id_area = $_REQUEST["lugar"];
         $id_sede = $_REQUEST["sede"];
@@ -208,13 +208,111 @@ class Cita extends CI_Controller {
                             'id_sede' => $id_sede,
                             'id_area' => $id_area,
                             'fecha' => $fecha,
-                            'hora' => $hora);
+                            'hora' => $hora,
+                            'usuario' => $this->session->userdata('usuario'));
             $this->cita_model->crear_reserva($reserva);
             echo "OK";
         } 
     }
 
+    /**
+     * function eliminar_edicion
+     *
+     * Funcion consulta que elimina registros de la tabla cue_edicion
+     *
+     */
+    function eliminar_edicion_tabla() {
+        $this->cita_model->eliminar_reservas($this->session->userdata('id_sede'));
+        echo "OK";
 
+    }
+
+
+
+    /**
+     * function verificaredicion desde cache
+     *
+     * Funcion consulta que el espacio en la cita no este utilizado por otra persona
+     *
+     */
+    function verificaredicion_cache() {
+        // Load library
+        
+        // Lets try to get the key
+
+
+        $hora = $_REQUEST["horaSeleccionada"];
+        $fecha = $_REQUEST["fechaSolicitada"];
+        $id_sede = $_REQUEST["sedeSeleccionada"];
+        $id_area = $_REQUEST["lugar"];
+
+        $key_cache = $fecha."_".$hora."_".$id_sede."_".$id_area;
+
+
+        $CacheID = $key_cache;
+ 
+        if(!$this->memcached_library->get($CacheID)) {
+        
+        $this->memcached_library->add($CacheID,'TRUE');
+        
+        } else {
+        $result = $this->memcached_library->get($CacheID);
+        }
+        echo $result;
+
+        
+
+        
+        
+        $this->cache->save($key_cache, 'TRUE', 120);
+       
+       $objeto_reserva_cache = $this->cache->file->get($key_cache);
+        var_dump($objeto_reserva_cache);
+        if (isset($objeto_reserva_cache)) {
+            echo "Espacio Utilizado Por Otro Usuario";
+        } else {
+            $this->cache->memcached->save($key_cache, 'TRUE', 120);
+            echo "OK";
+        } 
+    }
+
+
+    /**
+     * function verificarcita
+     *
+     * Funcion consulta que el espacio en la cita no este asignada
+     *
+     */
+    function verificarcita() {
+        $hora = $_REQUEST["horaSeleccionada"];
+        $fecha = $_REQUEST["fechaSolicitada"];
+        $id_sede = $_REQUEST["sedeSeleccionada"];
+        $id_area = $_REQUEST["lugar"];
+        $row = $this->cita_model->verificar_cita($id_sede,$id_area,$fecha,$hora);
+        if (isset($row->id_cita)) {
+            $objetoTemporal = (object) array(  'nroDocumento' => $row->nro_documento,
+                                                'primerNombre' => $row->primer_nombre,
+                                                'segundoNombre' => $row->segundo_nombre,
+                                                'primerApellido' => $row->primer_apellido,
+                                                'segundoApellido' => $row->segundo_apellido,
+                                                'observacion' =>  $row->observa,
+                                                'tipoConsulta' => $row->tipo_consulta,
+                                                'tipoViejo' => $row->tipo_viejo,
+                                                'estadoConsulta' =>$row->estado,
+                                                'medio' => $row->medios,
+                                                'vista' => $row->vista,
+                                                'fechaNacimiento' => $row->cumple,
+                                                'hora' => $row->hora,
+                                                'idUnicoCita' => $row->id_cita,
+                                                'correo' => $row->correo,
+                                                'celular' => $row->celular,
+                                                'telefono' => $row->telefono);
+
+            echo json_encode($objetoTemporal);
+        } else {
+            echo "OK";
+        } 
+    }
 
      /**
      * function curdcita
@@ -246,6 +344,7 @@ class Cita extends CI_Controller {
             $id_area = $_REQUEST["lugar"];
             $correo = $_REQUEST["correo"];
             $id_cita = $_REQUEST["idUnicoCita"];
+            $edad = $_REQUEST["edad"];
             
             $cita = array(
                             'primer_nombre' => $primerNombre,
@@ -293,6 +392,8 @@ class Cita extends CI_Controller {
                         'celular' => $celular,
                         'email' => $correo,
                         'medio' => $medio,
+                        'id_sede' => $sedeSeleccionada,
+                        'edad' => $edad,
                         'ndoc' => $nroDocumento,
                         'tipoDoc' => $tipoDoc);
                 $this->paciente_model->crear_paciente($paciente);
@@ -385,6 +486,47 @@ class Cita extends CI_Controller {
             echo "NO_DATOS";
         }    
     } 
+
+     /**
+     * function buscarcitas
+     *
+     * Funcion buscarcitas_eliminadas busca citas eliminadas dentro de un rango de fechas
+     *
+     */
+    function buscarcitas_eliminadas() {
+
+        $id_sede = $_REQUEST["sede"];
+        $fechaFinal = $_REQUEST["fechaFinal"];
+        $fechaInicio = $_REQUEST["fechaInicio"];
+        
+        $resultado_citas_eliminadas = $this->cita_model->get_citas_eliminadas($fechaInicio,$fechaFinal);
+        
+        if(isset($resultado_citas_eliminadas)){
+            $citasEncontradas = array();
+            foreach ($resultado_citas_eliminadas as $row) {
+                $objetoTemporal = (object) array(   'hora' => $row->hora,
+                                                    'fecha' => $row->fecha,
+                                                    'fecha_ult' => $row->fecha_ult,
+                                                    'usult' => $row->usult,
+                                                    'idArea' => $row->id_area,
+                                                    'idsede' => $row->id_sede,
+                                                    'nroDocumento' => $row->nro_documento,
+                                                    'primerNombre' => $row->primer_nombre,
+                                                    'segundoNombre' => $row->segundo_nombre,
+                                                    'primerApellido' => $row->primer_apellido,
+                                                    'segundoApellido' => $row->segundo_apellido,
+                                                    'observacion' => $row->observa,
+                                                    'tipoConsulta' => $row->tipo_consulta,
+                                                    'estadoConsulta' =>$row->estado
+                                                    );
+                    $citasEncontradas[] = $objetoTemporal;
+                }
+            echo json_encode($citasEncontradas);
+        }else{
+            echo "NO_DATOS";
+        }    
+    } 
+    
 
 
      /**

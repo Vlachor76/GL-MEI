@@ -40,4 +40,19 @@ class Administracion_model extends CI_Model {
         return $query->row();
     }
 
+    
+    // Funcion obtiene los diagnosticos 
+    function  get_diagnosticos($cod_diag) {
+        $this->db->like('codconsult', $cod_diag);
+        $query = $this->db->get('cie10_diag',7);
+        return $query->result();
+    }
+
+    // Funcion obtiene los procedimientos 
+    function  get_procedimientos($cod_proc) {
+        $this->db->like('codigo', $cod_proc);
+        $query = $this->db->get('cups_proc',7);
+        return $query->result();
+    }
+
 }

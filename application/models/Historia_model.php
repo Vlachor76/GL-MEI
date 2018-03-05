@@ -44,7 +44,7 @@ class Historia_model extends CI_Model {
     function get_evoluciones($tipodoc,$numero) {
         $this->db->where('tipoDoc', $tipodoc);
         $this->db->where('ndoc', $numero);
-        $this->db->order_by('fecha_registro', 'DESC');
+        $this->db->order_by('fecha', 'DESC');
         $query = $this->db->get('evolucion');
         return $query->result();
     }
@@ -55,6 +55,34 @@ class Historia_model extends CI_Model {
         $this->db->where('id_evolucion', $id_evolucion);
         $query = $this->db->get('evolucion');
         return $query->row();
+    }
+
+    // Funcion que cambia la identificacion de un paciente
+    function cambiar_identificacion($documentoActual, $documentoNuevo) {
+        $this->db->update('ceu_historia',  array('documento' => $documentoNuevo), array('documento' => $documentoActual));
+        $this->db->update('ceu_evolucion',  array('ndoc' => $documentoNuevo), array('ndoc' => $documentoActual));   
+    }
+
+
+    // Funcion que busca las sesiones de un paquete para el informe de excel
+    function historia_informe_excel($fecha_ini,$fecha_fin) {
+        $sqlInforme = "SELECT ceu_historia.fecha, ceu_paciente.tipodoc, ceu_paciente.ndoc, 
+        ceu_paciente.nombre1, ceu_paciente.apellido1, ceu_paciente.sexo, ceu_paciente.edad,ceu_paciente.reside, 
+        ceu_paciente.codiUbi, ceu_paciente.municipio, ceu_historia.codiag, ceu_historia.coproc 
+        FROM ceu_historia 
+        JOIN `ceu_paciente` ON ceu_historia.documento = ceu_paciente.ndoc 
+                            and ceu_historia.tipodoc = ceu_paciente.tipodoc 
+        WHERE ceu_historia.fecha >= '$fecha_ini' AND ceu_historia.fecha <= '$fecha_fin'  
+        UNION 
+        SELECT ceu_evolucion.fecha, ceu_paciente.tipodoc, ceu_paciente.ndoc, ceu_paciente.nombre1, 
+        ceu_paciente.apellido1, ceu_paciente.sexo,ceu_paciente.edad, ceu_paciente.reside, ceu_paciente.codiUbi, 
+        ceu_paciente.municipio, ceu_evolucion.codiag, ceu_evolucion.coproc 
+        FROM ceu_evolucion 
+        JOIN ceu_paciente ON ceu_evolucion.ndoc = ceu_paciente.ndoc 
+                          and ceu_evolucion.tipodoc = ceu_paciente.tipodoc 
+        WHERE ceu_evolucion.fecha >= '$fecha_ini' AND ceu_evolucion.fecha <= '$fecha_fin'";
+        $query = $this->db->query($sqlInforme);
+        return $query->result();
     }
    
 

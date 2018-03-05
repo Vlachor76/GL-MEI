@@ -26,12 +26,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <section id="cuerpo"  class="cuerpo">
         <h1>Ingreso SiipsWEB</h1>
         <div class="formulario">
-           <input type="hidden" id="urlhome" value="<?php echo site_url('menu'); ?>">
+        <input type="hidden" id="urlhome" value="<?php echo site_url('menu'); ?>">
             <form action="<?php echo site_url('login/validar_usuario/'); ?>"  id="formingreso" method="post" accept-charset="utf-8">
                 <input type="text"  id="usuario"  name="usuario" placeholder="NOMBRE DE USUARIO" maxlength="10">
                 <input type="password" id="contrasena" name="contrasena" placeholder="CONTRASEÑA" maxlength="10">
                 <select id="sede" name="sede">
-                    <option value="1">Consultorio</option>
+                <option value="1">Consultorio</option>
                 </select>
                 <button type="button" id="ingresarSistema">Entrar</button>
             </form>

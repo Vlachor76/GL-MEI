@@ -5,6 +5,7 @@ var objetoActual ;
 
 setInterval("llenarGrillaCitas()", 10000);
 
+
 $(document).ready(function() {
     $( "#sedeSeleccionada" ).val($("#id_sede").val());
     llenarDatosSede();
@@ -79,7 +80,7 @@ function llenarGrillaCitas(){
         .done(function(data) {  
             listadoCitas = data;
             $.each(JSON.parse(listadoCitas), function(index, value){     
-                var newItem = "<div class='grup' style='background:"+value.color+"'>"+
+                var newItem ="<div class='grup' style='background:"+value.color+"'>"+
                 "<div class='hora'><a  onclick='showModalTomarCita("+index+")'  >"+ value.hora +"</a></div>"+
                 "<div class='paciente' onclick='showModalTomarCita("+index+")' >"+value.primerNombre +" "+value.primerApellido +"</div>"+
                 "<div class='telefono' onclick='showModalTomarCita("+index+")' >"+(value.telefono?value.telefono:"")+"</div>"+
@@ -132,6 +133,10 @@ function showModalbuscarCita(){
     $('#myModalBuscarCita').modal('show');
 }
 
+function showModalbuscarCitaEliminadas(){
+    $('#myModalBuscarCitasEliminadas').modal('show');
+}
+
 function buscarCita(){
     $("div#resultadoBusquedaCitas").html("");
     if($('#fechaInicio').val() == ""){
@@ -163,26 +168,31 @@ function buscarCita(){
                 correoBusqueda:correoBusqueda },
         context: document.body})
         .done(function(data) {  
-            if(data != 'NO_DATOS') { 
-            inHTML +='<div class="grupo">'+
-            '<div class="hora">hora</div>'+
-            '<div class="paciente">Documento</div>'+
-            '<div class="paciente">Paciente</div>'+
-            '<div class="telefono">Estado</div>'+
-            '<div class="datos_adicionales">Fecha</div>'+
-            '<div class="datos_adicionales">Accion</div>'+
-            '</div>'
+            if(data != 'NO_DATOS') {
+            inHTML +='<table class="table table-bordered">'+
+            '<thead>'+
+            '<tr>'+
+                '<th>hora</th>'+
+                '<th>Documento</th>'+
+                '<th>Paciente</th>'+
+                '<th>Estado</th>'+
+                '<th>Fecha</th>'+
+                '<th>Accion</th>'+
+            '</tr>'+
+            '</thead>'+
+            '<tbody>'
             $.each(JSON.parse(data), function(index, value){     
-                var newItem = "<div class='grup'>"+
-                "<div class='hora'>"+ value.hora +"</div>"+
-                "<div class='paciente'>"+ value.nroDocumento +"</a></div>"+
-                "<div class='paciente'  >"+value.primerNombre +" "+value.primerApellido +"</div>"+
-                "<div class='telefono'  >"+value.estadoConsulta+"</div>"+
-                "<div class='datos_adicionales'  >"+value.fecha+"</div>"+   
-                "<div class='datos_adicionales'  ><a onclick='irAgenda(\""+value.fecha+"\",\""+value.idArea+"\",\""+value.idsede+"\");' href='#'>Ir Agenda</a></div>"+
-                "</div>"
-                    inHTML += newItem;  
+                var newItem = "<tr>"+
+                "<td>"+ value.hora +"</td>"+
+                "<td>"+ value.nroDocumento +"</td>"+
+                "<td>"+value.primerNombre +" "+value.primerApellido +"</td>"+
+                "<td>"+ value.estadoConsulta +"</td>"+
+                "<td>"+ value.fecha +"</td>"+
+                "<td><a onclick='irAgenda(\""+value.fecha+"\",\""+value.idArea+"\",\""+value.idsede+"\");' href='#'>Ir Agenda</a></td>"+     
+                "</tr>"
+                    inHTML += newItem;
                 }); 
+                inHTML +='</tbody></table>';
                 $("div#resultadoBusquedaCitas").html(inHTML);
             }else{
                 alertify.set('notifier','position', 'top-center');
@@ -192,6 +202,51 @@ function buscarCita(){
     });
   
 
+}
+
+function buscarCitasEliminadas(){
+    var inHTML = ""; 
+    var sede = $("#sedeSeleccionada").val();
+    var fechaInicio = $("#fechaInicioEliminadas").val();
+    var fechaFinal = $("#fechaFinalEliminadas").val();
+    $.ajax({
+        method: "POST",
+        url: "./cita/buscarcitas_eliminadas",
+        data: { fechaFinal: fechaFinal ,sede: sede , fechaInicio :fechaInicio },
+        context: document.body})
+        .done(function(data) {  
+            if(data != 'NO_DATOS') {
+            inHTML +='<table class="table table-bordered">'+
+            '<thead>'+
+            '<tr>'+
+                '<th>hora</th>'+
+                '<th>Documento</th>'+
+                '<th>Paciente</th>'+
+                '<th>Fecha Eliminada</th>'+
+                '<th>Observación</th>'+
+                '<th>Usuario</th>'+
+            '</tr>'+
+            '</thead>'+
+            '<tbody>'
+            $.each(JSON.parse(data), function(index, value){     
+                var newItem = "<tr>"+
+                "<td>"+ value.hora +"</td>"+
+                "<td>"+ value.nroDocumento +"</td>"+
+                "<td>"+value.primerNombre +" "+value.primerApellido +"</td>"+
+                "<td>"+ value.fecha_ult +"</td>"+
+                "<td>"+ value.observacion +"</td>"+
+                "<td>"+ value.usult +"</td>"+
+                "</tr>"
+                    inHTML += newItem;
+                }); 
+                inHTML +='</tbody></table>';
+                $("div#resultadoBusquedaCitasEliminadas").html(inHTML);
+            }else{
+                alertify.set('notifier','position', 'top-center');
+                alertify.error("No se Encontraron Coincidencias con los datos ingresados");
+            }    
+                
+    });
 }
 
 
@@ -218,6 +273,7 @@ function(data, status){
 });
 
 function irAgenda(fecha,idarea,idsede){
+    $("#sedeSeleccionada").val(idsede.trim());
     $.ajax({
         method: "POST",
         url: "./cita/lugarsede",
@@ -229,7 +285,7 @@ function irAgenda(fecha,idarea,idsede){
             var lugarTemporal = "#opcionLugar"+value.id_lugar_sede;
             $(lugarTemporal).text(value.nombre_corto);
     });
-        $("#selectorLugares").val(idarea);
+        $("#selectorLugares").val(idarea.trim());
         $("#fechaGrilla").val(fecha);
         llenarGrillaCitas();
         $('#myModalBuscarCita').modal('hide');
@@ -257,38 +313,7 @@ function showModalTomarCita (idCita) {
             context: document.body})
             .done(function(data) {  
               if(data.trim() == "OK"){
-                $('#idCitaUnico').val(obj.idUnicoCita);
-                if(obj.nroDocumento == '' && localStorage.getItem("citaMover")){
-                    obj=JSON.parse(localStorage.getItem("citaMover"));
-                    $('#accion').val('move');
-                    $('#idCitaUnico').val(obj.idUnicoCita);    
-                }
-                
-                $('#tituloModalCita').text("Tomar Cita  "+ fechaSeleccionada+"  "+obj.hora +"  por "+usuario);
-                $('#idCitaUnicoEliminar').val(obj.idUnicoCita);  
-                $('#nroDocumento').val(obj.nroDocumento);
-                $('#primerNombre').val(obj.primerNombre);
-                $('#segundoNombre').val(obj.segundoNombre);
-                $('#primerApellido').val(obj.primerApellido);
-                $('#segundoApellido').val(obj.segundoApellido);
-                $('#telefono').val(obj.telefono);
-                $('#celular').val(obj.celular);
-                $('#correo').val(obj.correo);
-                $('#observacion').val(obj.observacion);
-                $('#tipoConsulta').val((obj.tipoConsulta?obj.tipoConsulta:"CM"));
-                $('#estadoConsulta').val((obj.estadoConsulta?obj.estadoConsulta:"I"));
-                $('#medio').val((obj.medio?obj.medio:""));
-                $('#fechaNacimiento').val(obj.fechaNacimiento);
-                $('#tipo_viejo').val(obj.tipoViejo);
-                $('#fechaSeleccionada').val($('#fechaGrilla').val())
-                $('#fechaSolicitada').val($('#fechaGrilla').val());
-                if(obj.vista == 1){
-                 $('#vista').prop('checked', true); 
-                }
-                if(obj.nroDocumento!=''){
-                    $('#moverCita').disabled=true;
-                }
-                $('#myModal').modal('show')
+                verificarCita(obj);
               }else{
                 alertify.set('notifier','position', 'top-center');
                 alertify.error("El espacio esta siendo editado por otro usuario");
@@ -297,6 +322,99 @@ function showModalTomarCita (idCita) {
         
         
 }
+
+
+function verificarCita(obj){
+    var horaSeleccionadaTem= $('#horaSeleccionada').val();
+    var lugarTem=$('#selectorLugares').val();
+    var sedeSeleccionadaTem=$('#sedeSeleccionada').val();
+    var fechaSolicitadaTem=$('#fechaGrilla').val();
+    var usuario = $('#userlogueado').val();
+    var titulo = "Tomar Cita  "+ fechaSolicitadaTem +"  "+obj.hora +"  por "+usuario;
+    $.ajax({
+        method: "POST",
+        url: "./cita/verificarcita",
+        data: { horaSeleccionada: horaSeleccionadaTem ,lugar:lugarTem ,
+                sedeSeleccionada:sedeSeleccionadaTem,fechaSolicitada:fechaSolicitadaTem}, 
+        context: document.body})
+        .done(function(data) {  
+          if(data.trim() != "OK"){
+            if(obj.idUnicoCita == data.idUnicoCita){
+                alertify.set('notifier','position', 'top-center');
+                alertify.error("Cita Asignada Se recargara la Información");
+                llenarGrillaCitas();
+                titulo = titulo + " [ Cita Asignada Recargada Informacion ]";
+                obj = JSON.parse(data); 
+            }       
+        }
+
+        $('#idCitaUnico').val(obj.idUnicoCita);
+        if(obj.nroDocumento == '' && localStorage.getItem("citaMover")){
+            obj=JSON.parse(localStorage.getItem("citaMover"));
+            $('#accion').val('move');
+            $('#idCitaUnico').val(obj.idUnicoCita);    
+        }
+        
+        $('#tituloModalCita').text(titulo);
+        $('#idCitaUnicoEliminar').val(obj.idUnicoCita);  
+        $('#nroDocumento').val(obj.nroDocumento);
+        $('#primerNombre').val(obj.primerNombre);
+        $('#segundoNombre').val(obj.segundoNombre);
+        $('#primerApellido').val(obj.primerApellido);
+        $('#segundoApellido').val(obj.segundoApellido);
+        $('#telefono').val(obj.telefono);
+        $('#celular').val(obj.celular);
+        $('#correo').val(obj.correo);
+        $('#observacion').val(obj.observacion);
+        $('#tipoConsulta').val((obj.tipoConsulta?obj.tipoConsulta:"CM"));
+        $('#estadoConsulta').val((obj.estadoConsulta?obj.estadoConsulta:"I"));
+        $('#medio').val((obj.medio?obj.medio:""));
+        $('#fechaNacimiento').val(obj.fechaNacimiento);
+        $('#tipo_viejo').val(obj.tipoViejo);
+        $('#fechaSeleccionada').val($('#fechaGrilla').val())
+        $('#fechaSolicitada').val($('#fechaGrilla').val());
+        if(obj.vista == 1){
+            $('#vista').prop('checked', true); 
+        }
+        if(obj.nroDocumento!=''){
+            $('#moverCita').disabled=true;
+        }
+        $('#myModal').modal('show')
+
+
+       });
+    }
+
+    function eliminar_reservas(){
+        if( confirm("Esta Seguro De Eliminar Los Bloqueos") ){ 
+        $.ajax({
+            method: "POST",
+            url: "./cita/eliminar_edicion_tabla",
+            context: document.body})
+            .done(function(data) {
+                if(data.trim() == "OK"){
+                    alertify.set('notifier','position', 'top-center');
+                    alertify.success("Citas Bloqueadas Borradas Correctamente");
+                }
+            });
+        }
+    }
+
+    /**
+     * llenarGrillaCitas();
+            $.ajax({
+             method: "POST",
+             url: "./cita/eliminaredicion",
+             data: { horaSeleccionada: horaSeleccionadaTem ,lugar:lugarTem ,
+                     sedeSeleccionada:sedeSeleccionadaTem,fechaSolicitada:fechaSolicitadaTem}, 
+             context: document.body})
+             .done(function(data) {     
+             });
+     */
+
+
+
+    
 
 $("#myModal").on('hidden.bs.modal', function () {
     $('#vista').prop('checked', false); 
@@ -309,6 +427,7 @@ $("#myModal").on('hidden.bs.modal', function () {
         .done(function(data) {     
         });
 });
+
 
 function eliminarCita(){
     if($('#observacionEliminar').val() == ""){
@@ -357,7 +476,8 @@ function guardarDatosModal(){
     var isValido=validarFormularioModal();
     if(isValido){ 
     var usuario = localStorage.getItem("usuario");
-    var vista_check =  $('#vista').is(':checked') ? "1":"0";   
+    var vista_check =  $('#vista').is(':checked') ? "1":"0"; 
+    var edad = calcularEdad();
     $.ajax({
         method: "POST",
         url: "./cita/curdcita",
@@ -371,7 +491,7 @@ function guardarDatosModal(){
                 celular:$('#celular').val(),correo:$('#correo').val(),vista:vista_check,
                 telefono:$('#telefono').val(),sedeSeleccionada:$('#sedeSeleccionada').val(),
                 lugar:$('#selectorLugares').val(),idUnicoCita:$('#idCitaUnico').val(),
-                crearUsuario : $('#crearUsuario').val(),tipoDoc : $('#tdocumento').val()
+                crearUsuario : $('#crearUsuario').val(),tipoDoc : $('#tdocumento').val(),edad:edad
               }, 
         context: document.body})
         .done(function(data) {  
@@ -386,6 +506,17 @@ function guardarDatosModal(){
   }
 }
 
+function calcularEdad(){
+    var hoy = new Date();
+    var cumpleanos = new Date($("#fechaNacimiento").val());
+    var edad = hoy.getFullYear() - cumpleanos.getFullYear();
+    var m = hoy.getMonth() - cumpleanos.getMonth();
+    if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate())) {
+        edad--;
+    }
+    return edad;
+  }
+
 function moverCita(){
    if(objetoActual.primerNombre != ''){
       localStorage.setItem("citaMover",JSON.stringify(objetoActual));
@@ -399,7 +530,7 @@ function validarFormularioModal(){
         $('#crearUsuario').val('false')
         return true;
     } 
-
+    
     if($('#primerNombre').val() == '*'){
         $('#crearUsuario').val('false')
         return true;
@@ -436,5 +567,12 @@ function validarFormularioModal(){
 
 
 function imprimir(){
+    var contenido= document.getElementById("divCitas").innerHTML;
+    var contenidoOriginal= document.body.innerHTML;
+
+    document.body.innerHTML = contenido;
+
     window.print();
+
+    document.body.innerHTML = contenidoOriginal;
 }

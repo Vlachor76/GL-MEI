@@ -37,15 +37,16 @@
 			<form action=""  accept-charset="utf-8">
 			<input type="hidden" id="id_sede"    value="<?php echo $this->session->userdata('id_sede'); ?>">
 				<select name="sedeSeleccionada" id="sedeSeleccionada">
-				    <option value="1">Consultorio</option>
+	                <option value="1">Consultorio</option>
 				</select>
 				<select name="selectorLugares" id="selectorLugares">
 				</select>
 				<input type="date" id="fechaGrilla">
 				<button type="button" title="Buscar Cita"   onclick="showModalbuscarCita();"><span class="icon-eye"></span></button>
 				<button type="button" title="Imprimir Agenda Actual" onclick="imprimir();"><span class="icon-printer"></span></button>
-				<button type="button" title="Buscar Cita Eliminadas"><span class="icon-eye-off"></span></button>
+				<button type="button" title="Buscar Cita Eliminadas"  onclick="showModalbuscarCitaEliminadas();"  ><span class="icon-eye-off"></span></button>
 				<button type="button" title="Exportar Citas" onclick="exportarCitas();"><span class="icon-grid"></span></button>
+				<button type="button" style="float: right;margin-right:15px;" title="Eliminar Bloqueos" onclick="eliminar_reservas();"><span class="icon-x"></span></button>
 				<div class="grupo">
 						<div class="hora">hora</div>
 						<div class="paciente">Paciente</div>
@@ -62,7 +63,7 @@
 						<div class="prof" id="opcionLugar7"></div>
 						<div class="prof" id="opcionLugar8"></div>
 						<div class="prof" id="opcionLugar9"></div>
-					</div>
+				</div>
 				<div id="divCitas" > 
 				</div>
 			</form>
@@ -135,7 +136,7 @@
 									</label>
 									<label>Tipo
 										<select id="tipoConsulta">
-											<option value="BQ">Bloqueado, no dar citas varios</option>
+										<option value="BQ">Bloqueado, no dar citas varios</option>
 											<option value="CM">Consulta Medica</option>
 											<option value="CR">Consulta Revisión</option>
 											<option value="TT">Tratamiento</option>
@@ -144,7 +145,7 @@
 									</label>
 									<label>Estado
 										<select id="estadoConsulta">
-											<option value="I">Nota Importante</option>
+										   <option value="I">Nota Importante</option>
 											<option value="V">Visto</option>
 											<option value="C">Confirmado</option>
 											<option value="X">Inasistio</option>
@@ -237,13 +238,41 @@
 						<button type="button" title="Buscar Cita" onclick="buscarCita();" style="margin-top: 20px;" class="botonesModal icon-eye"></button>									
 					   </label>
 					</form>
-					<div id="resultadoBusquedaCitas">
+					<div id="resultadoBusquedaCitas" class="table-responsive" style="max-height: 350px;margin-top: 140px;">
 					</div>
 				</div>
 			</div>  
 		</div>
     </div>
 
+
+ <!-- Modal Modal de citas eliminadas-->
+	<div class="modal fade" id="myModalBuscarCitasEliminadas" role="dialog" style="padding: 10px;">
+		<div class="modal-dialog modal-lg">
+		  <!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Buscar Cita Eliminadas</h4>
+				</div>
+				<div class="modal-body" style="height: 400px"	>
+					<form class="formularios" accept-charset="utf-8" style="padding: 0;">
+						<label>Fecha Inicio
+							<input type="date" id="fechaInicioEliminadas" placeholder="">
+						</label>
+						<label>Fecha Fin
+							<input type="date" id="fechaFinalEliminadas" placeholder="">
+						</label>
+						<label>
+						<button type="button" title="Buscar Cita ELiminadas" onclick="buscarCitasEliminadas();" style="margin-top: 20px;" class="botonesModal icon-eye"></button>									
+					   </label>
+					</form>
+					<div id="resultadoBusquedaCitasEliminadas" class="table-responsive" style="max-height: 300px;margin-top: 70px;">
+					</div>
+				</div>
+			</div>  
+		</div>
+    </div>
 	
 
 	

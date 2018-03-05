@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
-<head><meta http-equiv="Content-Type" content="text/html; charset=gb18030">
-	
+<head>
+	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>SIIPSWEB</title>
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>css/fuente.css">
@@ -28,7 +28,6 @@
 		</ul>
 		</div>
 		</nav>
-
 		
 		<?php if(isset($mensaje)) { ?>
 		   <h1 style="color:#B61F24;"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>  <?php echo $mensaje  ?></h1>

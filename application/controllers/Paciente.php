@@ -19,6 +19,8 @@ class Paciente extends CI_Controller {
         parent::__construct();
         $this->is_logged_in();
         $this->load->model('paciente_model');
+        $this->load->model('historia_model');
+        $this->load->model('paquete_model');
         $this->load->model('administracion_model');
         $this->load->helper('mysql_to_excel_helper');
         date_default_timezone_set("America/Bogota");
@@ -108,6 +110,27 @@ class Paciente extends CI_Controller {
         echo  json_encode(array('descripcion' => $valoracion->valoracion , 'valor' => '100 000'));
     }
 
+    
+    
+    /**
+     * function cambiar_identificacion
+     *
+     * Funcion cambiar la identificacion actual por una nueva 
+     *
+     */
+    function cambiar_identificacion() {
+        $identificacionActual = $this->input->post('identificacionActual');
+        $identificacionNueva = $this->input->post('identificacionNueva');
+        $this->paciente_model->cambiar_identificacion($identificacionActual,$identificacionNueva);
+        $this->paquete_model->cambiar_identificacion($identificacionActual,$identificacionNueva);
+        $this->historia_model->cambiar_identificacion($identificacionActual,$identificacionNueva);
+
+        $insertar_cambio_identificacion = (object) array( 'ndoc_actual' => $identificacionActual,
+                                        'ndoc_cambio' => $identificacionNueva,
+                                        'id_usuario' => $this->session->userdata('usuario'));
+        $this->paciente_model->insertar_cambio_identificacion($insertar_cambio_identificacion);
+        echo "OK";
+    }
     /**
      * function guardar_valoracion
      *

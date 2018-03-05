@@ -143,47 +143,17 @@
             return;	
         }
 
-        if($( "#fecha_uc" ).val() == ""){
-            alertify.set('notifier','position', 'top-center');
-            alertify.error("Determine La Fecha De La Ultima Cita ");
-            $( "#fecha_uc" ).focus();
-            return;	
-        }
+       
 
-        if($( "#medico_uc" ).val() == ""){
-            alertify.set('notifier','position', 'top-center');
-            alertify.error("Determine El Medico Ultima Cita ");
-            $( "#medico_uc" ).focus();
-            return;	
-        }
+        
 
-        if($( "#medio" ).val() == ""){
-            alertify.set('notifier','position', 'top-center');
-            alertify.error("Determine El Medio ");
-            $( "#medio" ).focus();
-            return;	
-        }
+       
 
-        if($( "#consentimiento" ).val() == ""){
-            alertify.set('notifier','position', 'top-center');
-            alertify.error("Determine El Consentimiento ");
-            $( "#consentimiento" ).focus();
-            return;	
-        }
+        
 
-        if($( "#id_tipocir" ).val() == ""){
-            alertify.set('notifier','position', 'top-center');
-            alertify.error("Determine El Tipo Procedimiento ");
-            $( "#id_tipocir" ).focus();
-            return;	
-        }
+        
 
-        if($( "#refpor" ).val() == ""){
-            alertify.set('notifier','position', 'top-center');
-            alertify.error("Determine Referido ");
-            $( "#refpor" ).focus();
-            return;	
-        }
+       
         $("#ndoc").prop( "disabled", false );
         $("#tipoDoc").prop( "disabled", false );
 
@@ -276,7 +246,6 @@
         }
         $("#edad").val(edad);
       }
-
       
 });
 
@@ -284,6 +253,44 @@
 function exportarPacientes(){
     $('#modalExportPacientes').modal('show');
 }
+
+function cambiarIdentificacion(){
+    var identificacionActual = $('#ndoc').val();
+    if(identificacionActual.length > 1 ){
+      $('#documentoActual').val(identificacionActual);
+      $('#modalCambioIdentidad').modal('show');
+    }else{
+        alertify.set('notifier','position', 'top-center');
+        alertify.error("Ingresar Un Paciente Valido"); 
+    }   
+}
+
+function cambiarIdentidad () { 
+    var identificacionActual = $('#ndoc').val();
+    var identificacionNueva = $( "#documentoNuevo" ).val();
+    if(identificacionNueva.length > 1){
+        if(confirm("Estas Seguro de cambiar Numero :"+identificacionActual +" Por : "+identificacionNueva)){ 
+            
+            $.post('./paciente/cambiar_identificacion',{
+                identificacionActual:identificacionActual,
+                identificacionNueva : identificacionNueva },
+            function(data, status){
+                if(data == 'OK'){
+                    alertify.set('notifier','position', 'top-center');
+                    alertify.success("Se Cambio Exitosamente El Documento");
+                    $('#ndoc').val(identificacionNueva);
+                    $('#modalCambioIdentidad').modal('hide'); 
+                }else{
+                    alertify.set('notifier','position', 'top-center');
+                    alertify.error("Error Al Guardar Valoración");
+                }
+            });
+        }
+    }else{
+        alertify.set('notifier','position', 'top-center');
+        alertify.error("Ingresar Un Documento Nuevo Valido");     
+    }
+    }
 
 function exporPacientesExcel(){
     $('#fechaInicio').val();
