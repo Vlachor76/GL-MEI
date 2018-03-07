@@ -35,17 +35,28 @@ class Historia_model extends CI_Model {
     function get_historia($tipodoc,$numero) {
         $this->db->where('tipoDoc', $tipodoc);
         $this->db->where('documento', $numero);
+        $this->db->select("historia.*,usuario.nombre1,usuario.nombre2");
+        $this->db->select("usuario.apellido1,usuario.apellido2");
+        $this->db->from('historia');
+        $this->db->join('usuario', 'usuario.documento = historia.id_usuario');
+        $this->db->where('historia.tipoDoc', $tipodoc);
+        $this->db->where('historia.documento', $numero);
         $this->db->order_by('fecha', 'DESC');
-        $query = $this->db->get('historia');
+        $query = $this->db->get();
         return $query->result();
     }
 
+
     // Funcion que obtiene las evoluciones de un paciente
     function get_evoluciones($tipodoc,$numero) {
+        $this->db->select("evolucion.*,usuario.nombre1,usuario.nombre2");
+        $this->db->select("usuario.apellido1,usuario.apellido2");
+        $this->db->from('evolucion');
+        $this->db->join('usuario', 'usuario.documento = evolucion.id_usuario');
         $this->db->where('tipoDoc', $tipodoc);
         $this->db->where('ndoc', $numero);
         $this->db->order_by('fecha', 'DESC');
-        $query = $this->db->get('evolucion');
+        $query = $this->db->get();
         return $query->result();
     }
 
@@ -59,28 +70,28 @@ class Historia_model extends CI_Model {
 
     // Funcion que cambia la identificacion de un paciente
     function cambiar_identificacion($documentoActual, $documentoNuevo) {
-        $this->db->update('ceu_historia',  array('documento' => $documentoNuevo), array('documento' => $documentoActual));
-        $this->db->update('ceu_evolucion',  array('ndoc' => $documentoNuevo), array('ndoc' => $documentoActual));   
+        $this->db->update('historia',  array('documento' => $documentoNuevo), array('documento' => $documentoActual));
+        $this->db->update('evolucion',  array('ndoc' => $documentoNuevo), array('ndoc' => $documentoActual));   
     }
 
 
     // Funcion que busca las sesiones de un paquete para el informe de excel
     function historia_informe_excel($fecha_ini,$fecha_fin) {
-        $sqlInforme = "SELECT ceu_historia.fecha, ceu_paciente.tipodoc, ceu_paciente.ndoc, 
-        ceu_paciente.nombre1, ceu_paciente.apellido1, ceu_paciente.sexo, ceu_paciente.edad,ceu_paciente.reside, 
-        ceu_paciente.codiUbi, ceu_paciente.municipio, ceu_historia.codiag, ceu_historia.coproc 
-        FROM ceu_historia 
-        JOIN `ceu_paciente` ON ceu_historia.documento = ceu_paciente.ndoc 
-                            and ceu_historia.tipodoc = ceu_paciente.tipodoc 
-        WHERE ceu_historia.fecha >= '$fecha_ini' AND ceu_historia.fecha <= '$fecha_fin'  
+        $sqlInforme = "SELECT historia.fecha, paciente.tipodoc, paciente.ndoc, 
+        paciente.nombre1, paciente.apellido1, paciente.sexo, paciente.edad,paciente.reside, 
+        paciente.codiUbi, paciente.municipio, historia.codiag, historia.coproc 
+        FROM historia 
+        JOIN `paciente` ON historia.documento = paciente.ndoc 
+                            and historia.tipodoc = paciente.tipodoc 
+        WHERE historia.fecha >= '$fecha_ini' AND historia.fecha <= '$fecha_fin'  
         UNION 
-        SELECT ceu_evolucion.fecha, ceu_paciente.tipodoc, ceu_paciente.ndoc, ceu_paciente.nombre1, 
-        ceu_paciente.apellido1, ceu_paciente.sexo,ceu_paciente.edad, ceu_paciente.reside, ceu_paciente.codiUbi, 
-        ceu_paciente.municipio, ceu_evolucion.codiag, ceu_evolucion.coproc 
-        FROM ceu_evolucion 
-        JOIN ceu_paciente ON ceu_evolucion.ndoc = ceu_paciente.ndoc 
-                          and ceu_evolucion.tipodoc = ceu_paciente.tipodoc 
-        WHERE ceu_evolucion.fecha >= '$fecha_ini' AND ceu_evolucion.fecha <= '$fecha_fin'";
+        SELECT evolucion.fecha, paciente.tipodoc, paciente.ndoc, paciente.nombre1, 
+        paciente.apellido1, paciente.sexo,paciente.edad, paciente.reside, paciente.codiUbi, 
+        paciente.municipio, evolucion.codiag, evolucion.coproc 
+        FROM evolucion 
+        JOIN paciente ON evolucion.ndoc = paciente.ndoc 
+                          and evolucion.tipodoc = paciente.tipodoc 
+        WHERE evolucion.fecha >= '$fecha_ini' AND evolucion.fecha <= '$fecha_fin'";
         $query = $this->db->query($sqlInforme);
         return $query->result();
     }

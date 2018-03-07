@@ -20,6 +20,7 @@ class Historia extends CI_Controller {
         $this->is_logged_in();
         $this->load->helper('url');
         $this->load->model('historia_model');
+        $this->load->model('paciente_model');
         $this->load->helper('mysql_to_excel_helper');
         $this->load->model('administracion_model');
         date_default_timezone_set("America/Bogota");
@@ -157,6 +158,27 @@ class Historia extends CI_Controller {
 
 
     } 
+    
+
+    function historia_medica_pdf(){
+        $this->load->library('mydompdf');
+        //Servirá para iterar y generar hojas para ver
+            //el header y footer en varias hojas
+        $nro_identidad =  $_REQUEST["numero"];
+        $tipodoc =$_REQUEST["tipodoc"];;
+        $data["paciente"] = $this->paciente_model->get_paciente($nro_identidad);
+        $data["historias"] = $this->historia_model->get_historia($tipodoc,$nro_identidad);
+        $data["evoluciones"] = $this->historia_model->get_evoluciones($tipodoc,$nro_identidad);
+        $html = $this->load->view('aplicacion/pdf/historia_pdf', $data, true);
+        $this->mydompdf->load_html($html);
+        $this->mydompdf->render();
+            //Así se agrega css a la vista que queremos renderizar
+            //En la vista hay que agregarlo con link en el head del documento html
+        $this->mydompdf->stream("Historia".$nro_identidad.".pdf", array(
+            "Attachment" => false
+        ));
+        
+    }
 
 
 }

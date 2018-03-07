@@ -112,7 +112,7 @@
         </label>
 
         <label>Revision por Sistema
-            <textarea style="margin-top: 19px;" name="revision"></textarea>
+            <textarea style="margin-top: 19px;" name="revision" value="NEGATIVOS"></textarea>
         </label>
         <div class="svitales">
             <label>Examen Fisico
@@ -141,10 +141,10 @@
         <label>
         <div class="svitales">
             <label>TA
-                <input type="text" id="ta"  value="" placeholder="">
+                <input type="text" id="ta"  value="120/70" placeholder="">
             </label>
             <label>FC
-                <input type="text" id="fc" value="" placeholder="">
+                <input type="text" id="fc" value="80" placeholder="">
             </label>
             <label>PESO
                 <input type="text" id="peso" value="" placeholder="">
@@ -176,7 +176,7 @@
             <textarea name="diagnostico"  id="diagnostico"></textarea>
         </label>
         <label>Medicamentos
-            <textarea id="medicamentos"></textarea>
+            <textarea id="medicamentos" value="NINGUNO"></textarea>
         </label>
         <label>
         <div class="svitales">
@@ -194,7 +194,7 @@
         </label>
         <div style="width: 100%; border-bottom: solid 1px #000; float: left;"></div>
         <label>Conducta De Entrada Y Tratamiento
-            <textarea style="margin-top: 19px;" name="conducta"></textarea>
+            <textarea style="margin-top: 19px;" name="conducta" ></textarea>
         </label>
         <label><div class="svitales">
             <label>Procedimiento</label>
@@ -270,6 +270,7 @@
                             </button>
                         </li>
                     </ul>
+                    <button type="button" title="Imprimir Historia"  onclick="imprimirHistoria()" class="botonesModal icon-printer"></button>
 				   </div>
 				</div>			
 				</div>

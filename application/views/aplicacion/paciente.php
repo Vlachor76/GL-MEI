@@ -72,9 +72,9 @@
 						<option value="envigado">Envigado</option>
 						<option value="0000">Pendiente</option>
 					</select>
-					<input type="number" id="tel1"  name="tel1" placeholder="Telefono 1">
-					<input type="number" id="tel2"  name="tel2" placeholder="Telefono 2">
-					<input id="celular" type="number" name="celular" placeholder="Celular">
+					<input type="text" id="tel1"  name="tel1" placeholder="Telefono 1">
+					<input type="text" id="tel2"  name="tel2" placeholder="Telefono 2">
+					<input id="celular" type="text" name="celular" placeholder="Celular">
 					<select id="estciv" name="estciv">
 						<option value="SOLTERO/A">Soltero(a)</option>
 						<option value="CASADO/A">Casado(a)</option>

@@ -65,7 +65,7 @@ $(document).ready(function() {
             function(data, status){
                 alertify.set('notifier','position', 'top-center');
                 alertify.success("Se Guardo Existosamente La Historia");  
-                cargarDatos();
+                location.reload();
             });
         }else{
             alertify.set('notifier','position', 'top-center');
@@ -151,7 +151,7 @@ $(document).ready(function() {
                 if(data != 'null'){
                     alertify.set('notifier','position', 'top-center');
                     alertify.success("Se Guardo Existosamente La Evolucion");
-                    cargarDatos();
+                    location.reload();
                 }
             });
     });
@@ -366,6 +366,13 @@ function exporHistoriaExcel(){
     var fefin = $("#fechaFinalHistoria").val();
     location.href="./historia/export_excel_historia?feini="+feini+"&fefin="+fefin
 }
+
+function imprimirHistoria(){
+    var num = $("#documento").val();
+    var tipo = $("#tDocumnto").val();
+    window.open("./historia/historia_medica_pdf?numero="+num+"&tipodoc="+tipo, '_blank');
+}
+
 
 
 
