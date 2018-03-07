@@ -33,8 +33,6 @@ class Historia_model extends CI_Model {
 
     // Funcion que obtiene la historia
     function get_historia($tipodoc,$numero) {
-        $this->db->where('tipoDoc', $tipodoc);
-        $this->db->where('documento', $numero);
         $this->db->select("historia.*,usuario.nombre1,usuario.nombre2");
         $this->db->select("usuario.apellido1,usuario.apellido2");
         $this->db->from('historia');
