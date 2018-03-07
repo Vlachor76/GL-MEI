@@ -37,7 +37,7 @@
 </nav>
   <form id="formhistoria" action="<?php echo site_url('historia/crear_historia/'); ?>" method="get" accept-charset="utf-8">
     <input type="hidden" id="permisos"  value="<?php echo $permisos ?>">
-    <input type="hidden" id="id_usuario" name="id_usuario" value="<?php echo $this->session->userdata('usuario'); ?>">
+    <input type="hidden" id="id_usuario" name="id_usuario" value="<?php echo $this->session->userdata('idusuario'); ?>">
     <input type="hidden" id="id_sede" name="id_sede"   value="<?php echo $this->session->userdata('id_sede'); ?>">
     <input type="hidden" name="signos" id="signos"  value="">
     <input type="hidden" name="antecedentes" id="antecedentes"  value="">
