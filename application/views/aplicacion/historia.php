@@ -112,7 +112,7 @@
         </label>
 
         <label>Revision por Sistema
-            <textarea style="margin-top: 19px;" name="revision" value="NEGATIVOS"></textarea>
+            <textarea style="margin-top: 19px;" name="revision" >NEGATIVOS</textarea>
         </label>
         <div class="svitales">
             <label>Examen Fisico
@@ -176,7 +176,7 @@
             <textarea name="diagnostico"  id="diagnostico"></textarea>
         </label>
         <label>Medicamentos
-            <textarea id="medicamentos" value="NINGUNO"></textarea>
+            <textarea id="medicamentos" >NINGUNO</textarea>
         </label>
         <label>
         <div class="svitales">
