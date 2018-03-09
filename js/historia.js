@@ -399,5 +399,11 @@ function imprimirHistoria(){
 }
 
 
+$( "#verHistoria" ).click(function() {
+    $('#divevolucion').hide();
+    $('#divhistoria').show();
+});
+
+
 
 

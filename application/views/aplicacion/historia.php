@@ -228,6 +228,7 @@
         <label> <br> 
             <button type="button" title="Ver Valoración" class="consultarValoracion  botonesModal icon-airplay"></button>
             <button type="button" title="Ver Historia" id="consultarHistoria" class="botonesModal icon-clipboard"></button>
+            <button type="button" title="Ingresar Historia" id="verHistoria" class="botonesModal icon-edit"></button>
             <button type="button" title="Guardar Evolución" id="ingresarEvolucion" class="botonesModal icon-save"></button>
         </label>
     </div>
