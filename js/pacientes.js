@@ -7,6 +7,15 @@
         var today = fechaActual.getFullYear()+"-"+(month)+"-"+(day) ;
         $('#fecha_uc').val(today);
 
+        var url = window.location.href;
+
+        if(url.includes("tipo")){
+            var url = new URL(url);
+            $('#tipoDoc').val(url.searchParams.get("tipo"));
+            $('#ndoc').val(url.searchParams.get("iden"));
+            cargarDatos();
+        }
+
     obtenerMunicipios();
 
     function obtenerMunicipios(){
@@ -175,6 +184,10 @@
        * BUscar datos paciente si existe en base de datos
        */
       $( "#ndoc" ).change(function() {
+        cargarDatos();
+      });
+
+      function cargarDatos(){
         $.post('./paciente/buscarpaciente',{numero:$( "#ndoc" ).val()},
         function(data, status){
             if(data != 'null'){
@@ -189,7 +202,9 @@
             }
            
         });
-      });
+      }
+
+
 
 
       /**

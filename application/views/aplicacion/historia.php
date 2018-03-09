@@ -94,16 +94,18 @@
             </label>
             <label>
                 <select id="tipo_antescedentes" >
-                        <option value="personales">Personales</option>
-                        <option value="familiares">Familiares</option>
-                        <option value="qx">Quirúrgicos</option>
-                        <option value="toxicologicos">Toxicológicos</option>
-                        <option value="toxicoalergicos">Toxico-alergicos</option>
-                        <option value="esquema">Esquema de vacunación</option>
-                        <option value="traumaticos">Traumáticos</option>
-                        <option value="infecciosos">Infecciosos</option>
-                        <option value="ginecoobstetricos">Gineco-obstetricos</option>
-                        <option value="otros">Otros</option>
+                        <option value="Patológicos">Patológicos</option>
+                        <option value="Farmacológicos">Farmacológicos</option>
+                        <option value="Psiquiátricos">Psiquiátricos</option>
+                        <option value="Familiares">Familiares</option>
+                        <option value="Quirurgicos">Quirurgicos</option>
+                        <option value="Alérgicos">Alérgicos</option>
+                        <option value="Toxicològicos">Toxicològicos</option>
+                        <option value="Gineco obstétricos">Gineco obstétricos</option>
+                        <option value="Traumáticos">Traumáticos</option>
+                        <option value="Infecciosos">Infecciosos</option>
+                        <option value="Esquema de vacunación">Esquema de vacunación</option>
+                        <option value="Otros">Otros</option>
                 </select>
             </label>
         </div>

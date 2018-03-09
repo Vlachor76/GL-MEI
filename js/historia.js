@@ -3,15 +3,18 @@
 
 
   var objetoAntescedentes = {
-    "personales" : "ninguno",
-    "familiares" : "ninguno",
-    "quirurgicos" : "ninguno",
-    "toxicologicos" : "ninguno",
-    "esquema" : "ninguno",
-    "traumaticos" : "ninguno",
-    "infecciosos" : "ninguno",
-    "ginecoobstetricos" : "ninguno",
-    "otros" : "ninguno"
+    "Patol\u00F3gicos" : "ninguno",
+    "Farmacol\u00F3gicos" : "ninguno",
+    "Psiqui\u00E1tricos" : "ninguno",
+    "Familiares" : "ninguno",
+    "Quirurgicos" : "ninguno",
+    "Al\u00E9rgicos" : "ninguno",
+    "Toxicol\u00F3gicos" : "ninguno",
+    "Gineco obst\u00E9tricos" : "Gestaciones:  0,  Abortos: 0, Vivos:  0, Ces\u00E1reas: 0 , Partos:  0 \nFecha \u00FAltima Menstruaci\u00F3n: \nM\u00E9todo de Planificaci\u00F3n:",
+    "Traum\u00E1ticos" : "ninguno",
+    "Infecciosos" : "ninguno",
+    "Esquema de vacunaci\u00F3n" : "ninguno",
+    "Otros" : "ninguno"
   }
 
   var objetoExamen = {
@@ -42,7 +45,14 @@ $(document).ready(function() {
     var today = fechaActual.getFullYear()+"-"+(month)+"-"+(day) ;
     $('#fActual').val(today);
 
-  
+    var url = window.location.href;
+
+    if(url.includes("tipo")){
+        var url = new URL(url);
+        $('#tDocumnto').val(url.searchParams.get("tipo"));
+        $('#documento').val(url.searchParams.get("iden"));
+        cargarDatos();
+    }
     
     $('#divevolucion').hide();
     $('#divhistoria').hide();
@@ -65,7 +75,12 @@ $(document).ready(function() {
             function(data, status){
                 alertify.set('notifier','position', 'top-center');
                 alertify.success("Se Guardo Existosamente La Historia");  
-                location.reload();
+                setTimeout(
+                    function() 
+                    {
+                        location.reload();
+                    }, 800);
+
             });
         }else{
             alertify.set('notifier','position', 'top-center');
@@ -151,7 +166,12 @@ $(document).ready(function() {
                 if(data != 'null'){
                     alertify.set('notifier','position', 'top-center');
                     alertify.success("Se Guardo Existosamente La Evolucion");
-                    location.reload();
+                    setTimeout(
+                        function() 
+                        {
+                            location.reload();
+                        }, 800);
+
                 }
             });
     });
@@ -263,7 +283,7 @@ $(document).ready(function() {
                 verificarpermisos();       
             }else{
                 alertify.set('notifier','position', 'top-center');
-                alertify.error("No Existe Usuario con la identificación ingresada"); 
+                alertify.error("No Existe Usuario con la identificaci\u00F3n ingresada"); 
             }
         
         });
@@ -296,7 +316,12 @@ $(document).ready(function() {
        */
       $( "#ant_temporal" ).change(function() { 
           var tipo_antescedentes = $('#tipo_antescedentes').val();
-          objetoAntescedentes[tipo_antescedentes]= $('#ant_temporal').val();
+          if(tipo_antescedentes == "Gineco obst\u00E9tricos" && $('#sexo').text() == "M"){
+            $('#ant_temporal').val("ninguno");
+        }else{
+            $('#ant_temporal').val(objetoAntescedentes[tipo_antescedentes]);
+        }
+
      });
 
 

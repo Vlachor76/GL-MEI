@@ -429,6 +429,21 @@ $("#myModal").on('hidden.bs.modal', function () {
 });
 
 
+
+
+$("#nroDocumento").dblclick(function() {
+    var rol = $("#rol").val();
+    var tipoId = $("#tdocumento").val();
+    var identidad = $("#nroDocumento").val();
+    if(rol > 4){
+        location.href="./paciente?tipo="+tipoId+"&iden="+identidad;
+    }else{
+        location.href="./historia?tipo="+tipoId+"&iden="+identidad;
+    }
+  });
+
+
+
 function eliminarCita(){
     if($('#observacionEliminar').val() == ""){
         alertify.set('notifier','position', 'top-center');

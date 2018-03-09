@@ -36,6 +36,7 @@
 		<div class="grilla">
 			<form action=""  accept-charset="utf-8">
 			<input type="hidden" id="id_sede"    value="<?php echo $this->session->userdata('id_sede'); ?>">
+			<input type="hidden" id="rol"    value="<?php echo $this->session->userdata('rol'); ?>">
 				<select name="sedeSeleccionada" id="sedeSeleccionada">
 	                <option value="1">Consultorio</option>
 				</select>
