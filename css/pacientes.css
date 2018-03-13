@@ -21,6 +21,11 @@ legend{
 	margin-left: 5px;
 }
 
+.modalPacientes input {
+    width: 33%;
+    height: 33px;
+}
+
 .formulario{
 	margin-left: 9%;
 	width: 80%;

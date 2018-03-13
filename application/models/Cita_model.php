@@ -49,10 +49,19 @@ class Cita_model extends CI_Model {
     // Funcion obtiene los lugares de  cada sede
     function get_lugares_sede($id_sede) {
         $this->db->where('id_sede =', $id_sede);
-        $this->db->order_by('id_lugar_sede ', "ASC");
         $query = $this->db->get('lugares');
         return $query->result();
     }
+
+
+    // Funcion obtiene el lugar de una sede
+    function get_lugar_sede($id_sede,$id_lugar) {
+        $this->db->where('id_sede =', $id_sede);
+        $this->db->where('id_lugar_sede =', $id_lugar);
+        $query = $this->db->get('lugares');
+        return $query->row();
+    }
+
 
 
     // Funcion que elimina todos los datos de la tabla reservas
@@ -72,29 +81,29 @@ class Cita_model extends CI_Model {
 
     // Funcion que obtiene las citas creadas
     function get_citas($fecha,$id_area,$id_sede) {
-        $this->db->select("*");
-        $this->db->from('citas');
-        $this->db->join('colores_x_estado', 'colores_x_estado.cod_estado = citas.estado');
         $this->db->where('fecha =', $fecha);
         $this->db->where('id_area =', $id_area);
         $this->db->where('id_sede =', $id_sede);
         $this->db->where('estado !=', 'E');
-        $query = $this->db->get();
+        $this->db->order_by("hora","asc");
+        $query = $this->db->get('citas');
         return $query->result();
     }
 
 
     // Funcion que obtiene las citas creadas para el informe de excel
     function get_citas_excel($fecha,$id_area,$id_sede) {
-        $this->db->select("tipoDoc,nro_documento,CONCAT(primer_nombre,'',segundo_nombre) AS nombre,fecha,fecha_sol,vista,usuini,usult");
+        $this->db->select("ceu_citas.tipoDoc,nro_documento,CONCAT(primer_nombre,'',segundo_nombre) AS nombre,CONCAT(primer_apellido,'',segundo_apellido) AS apellido,fecha,fecha_sol,vista,usuini,usult");
+        $this->db->select("tipo_consulta,tipo_viejo,observa,estado,telefono,celular,correo");
+        $this->db->from("citas");
         $this->db->where('fecha =', $fecha);
         $this->db->where('id_area =', $id_area);
-        $this->db->where('id_sede =', $id_sede);
+        $this->db->where('citas.id_sede =', $id_sede);
         $this->db->where('estado !=', 'E');
-        $query = $this->db->get('citas');
+        $query = $this->db->get();
         return $query->result();
     }
-
+    
     // Funcion get tipos consulta
     function get_tipo_consultas($id_sede,$fecha) {
         $this->db->select('id_area,hora,tipo_viejo,tipo_consulta');
@@ -130,7 +139,7 @@ class Cita_model extends CI_Model {
     }
 
      // Funcion que obtiene las citas de un determinado paciente
-     function get_citas_paciente($fechaInicio,$fechaFinal,$nombre,$correo,$documento) {
+     function get_citas_paciente($fechaInicio,$fechaFinal,$nombre,$correo,$documento,$celular,$telefono) {
        
         $this->db->where('fecha  >=', $fechaInicio);
         $this->db->where('fecha  <=', $fechaFinal);
@@ -143,19 +152,30 @@ class Cita_model extends CI_Model {
         if($documento != ""){
             $this->db->where('nro_documento =', $documento);
         }
+        if($celular != ""){
+            $this->db->where('celular =', $celular);
+        }
+        if($telefono != ""){
+            $this->db->where('telefono =', $telefono);
+        }
         $query = $this->db->get('citas');
         return $query->result();
         
     }
 
     // Funcion que obtiene las citas eliminadas de un rango especifico
-    function get_citas_eliminadas($fechaInicio,$fechaFinal) {     
+    function get_citas_eliminadas($fechaInicio,$fechaFinal) {
+        $this->db->select("citas.*,lugares.nombre_corto,ceu_sedes.nombre_sede");
+        $this->db->from('citas');
+        $this->db->join('lugares', 'lugares.id_sede = ceu_citas.id_sede and ceu_lugares.id_lugar_sede = ceu_citas.id_area ');
+        $this->db->join('sedes', 'sedes.id_sede = ceu_citas.id_sede ');
         $this->db->where('fecha  >=', $fechaInicio);
         $this->db->where('fecha  <=', $fechaFinal);
         $this->db->where('estado =', 'E');
-        $query = $this->db->get('citas');
+        $query = $this->db->get();
         return $query->result();  
     }
+
 
     
 }

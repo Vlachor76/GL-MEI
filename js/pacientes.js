@@ -26,186 +26,37 @@
             .done(function(data) {  
                var  municipios = JSON.parse(data);
                $('#codiUbi').find('option').remove();
+               $('#lugarnac').find('option').remove();
+               $('#lugarnac').append('<option value="0">Lugar Nacimiento</option>');
                 $.each(municipios, function(index, value){     
                     $('#codiUbi').append('<option value="'+value.codubi+'">'+value.municipio+'</option>');
+                    $('#lugarnac').append('<option value="'+value.codubi+'">'+value.municipio+'</option>')
                 });    
             });
     };
         
-    $( "#registrarpaciente" ).click(function() {
-        if($( "#ndoc" ).val() == ""){
-            alertify.set('notifier','position', 'top-center');
-            alertify.error("Determine Numero Documento");
-            $( "#ndoc" ).focus();
-            return;	
-        } 
+    
 
-        if($( "#nombre1" ).val() == ""){
-            alertify.set('notifier','position', 'top-center');
-            alertify.error("Determine Primer Nombre ");
-            $( "#nombre1" ).focus();
-            return;	
-        }
-
-        if($( "#apellido1" ).val() == ""){
-            alertify.set('notifier','position', 'top-center');
-            alertify.error("Determine Primer Apellido ");
-            $( "#apellido1" ).focus();
-            return;	
-        }
-
-        if($( "#sexo" ).val() == ""){
-            alertify.set('notifier','position', 'top-center');
-            alertify.error("Determine Sexo");
-            $( "#sexo" ).focus();
-            return;	
-        }
-
-        if($( "#cumple" ).val() == ""){
-            alertify.set('notifier','position', 'top-center');
-            alertify.error("Determine Fecha Cumpleaños");
-            $( "#cumple" ).focus();
-            return;	
-        }
-
-        if($( "#reside" ).val() == ""){
-            alertify.set('notifier','position', 'top-center');
-            alertify.error("Determine Residencia");
-            $( "#reside" ).focus();
-            return;	
-        }
-
-        if($( "#codiUbi" ).val() == ""){
-            alertify.set('notifier','position', 'top-center');
-            alertify.error("Determine Ciudad");
-            $( "#codiUbi" ).focus();
-            return;	
-        }
-
-        if($( "#tel1" ).val() == ""){
-            alertify.set('notifier','position', 'top-center');
-            alertify.error("Determine Telefono Principal");
-            $( "#tel1" ).focus();
-            return;	
-        }
-
-        if($( "#celular" ).val() == ""){
-            alertify.set('notifier','position', 'top-center');
-            alertify.error("Determine Celular");
-            $( "#celular" ).focus();
-            return;	
-        }
-
-        if($( "#estciv" ).val() == ""){
-            alertify.set('notifier','position', 'top-center');
-            alertify.error("Determine Estado Civil");
-            $( "#estciv" ).focus();
-            return;	
-        }
-
-        if($( "#eps" ).val() == ""){
-            alertify.set('notifier','position', 'top-center');
-            alertify.error("Determine Eps");
-            $( "#eps" ).focus();
-            return;	
-        }
-
-        if($( "#tipoafi" ).val() == ""){
-            alertify.set('notifier','position', 'top-center');
-            alertify.error("Determine Tipo Afiliación");
-            $( "#tipoafi" ).focus();
-            return;	
-        }
-
-        if($( "#resp" ).val() == ""){
-            alertify.set('notifier','position', 'top-center');
-            alertify.error("Determine El Nombre Responsable");
-            $( "#resp" ).focus();
-            return;	
-        }
-
-        if($( "#dirresp" ).val() == ""){
-            alertify.set('notifier','position', 'top-center');
-            alertify.error("Determine La Dirección Responsable ");
-            $( "#dirresp" ).focus();
-            return;	
-        }
-
-        if($( "#parenresp" ).val() == ""){
-            alertify.set('notifier','position', 'top-center');
-            alertify.error("Determine El Parentesco Del Responsable ");
-            $( "#parenresp" ).focus();
-            return;	
-        }
-
-        if($( "#acomp" ).val() == ""){
-            alertify.set('notifier','position', 'top-center');
-            alertify.error("Determine El Acompañante ");
-            $( "#acomp" ).focus();
-            return;	
-        }
-
-        if($( "#telacomp" ).val() == ""){
-            alertify.set('notifier','position', 'top-center');
-            alertify.error("Determine El Telefono Acompañante ");
-            $( "#telacomp" ).focus();
-            return;	
-        }
-
-       
-
-        
-
-       
-
-        
-
-        
-
-       
-        $("#ndoc").prop( "disabled", false );
-        $("#tipoDoc").prop( "disabled", false );
-
-        $.post($('#formpaciente').attr("action"),$('#formpaciente').serialize(),
-        function(data, status){
-            if(data == "OK"){
-                alertify.set('notifier','position', 'top-center');
-                alertify.success("Se creo y/o edito exitosamente el paciente");
-            }else{
-                alertify.set('notifier','position', 'top-center');
-                alertify.error(data);
-            }   
-        });
-
-
+    /**
+       * BUscar datos paciente si existe en base de datos cuando cambia de documento
+       */
+      $( "#codiUbi" ).change(function() {
+        $( "#municipio" ).val($("#codiUbi :selected").text());
       });
 
       /**
-       * BUscar datos paciente si existe en base de datos
+       * BUscar datos paciente si existe en base de datos cuando cambia de documento
        */
       $( "#ndoc" ).change(function() {
         cargarDatos();
       });
 
-      function cargarDatos(){
-        $.post('./paciente/buscarpaciente',{numero:$( "#ndoc" ).val()},
-        function(data, status){
-            if(data != 'null'){
-                var paciente =JSON.parse(data);
-                $.each(paciente, function(index, value){
-                    $( "#"+index ).val(value);
-                });
-                $("#descripcionValoracion").val(paciente.valoracion);
-                $("#ndoc").prop( "disabled", true );
-                $("#tipoDoc").prop( "disabled", true );
-                calcularEdad();
-            }
-           
-        });
-      }
-
-
-
+      /**
+       * BUscar datos paciente si existe en base de datos cuando cambia de tipo de documento
+       */
+      $( "#tipoDoc" ).change(function() {
+        cargarDatos();
+      });
 
       /**
        * Guarda la valoracion del paciente
@@ -234,7 +85,6 @@
 
       });
 
-
       /**
        * Limpiar Formulario Paciente
        */
@@ -249,21 +99,158 @@
        */
       $( "#cumple" ).change(function() {
          calcularEdad();
-      });
-
-      function calcularEdad(){
-        var hoy = new Date();
-        var cumpleanos = new Date($("#cumple").val());
-        var edad = hoy.getFullYear() - cumpleanos.getFullYear();
-        var m = hoy.getMonth() - cumpleanos.getMonth();
-        if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate())) {
-            edad--;
-        }
-        $("#edad").val(edad);
-      }
+      });  
       
 });
 
+   /**
+   * registrarpaciente  ingresa un paciente nuevo al sistema
+   */
+
+function registrarpaciente () {
+    if($( "#ndoc" ).val() == ""){
+        alertify.set('notifier','position', 'top-center');
+        alertify.error("Determine Numero Documento");
+        $( "#ndoc" ).focus();
+        return;	
+    } 
+    if($( "#nombre1" ).val() == ""){
+        alertify.set('notifier','position', 'top-center');
+        alertify.error("Determine Primer Nombre ");
+        $( "#nombre1" ).focus();
+        return;	
+    }
+
+    if($( "#apellido1" ).val() == ""){
+        alertify.set('notifier','position', 'top-center');
+        alertify.error("Determine Primer Apellido ");
+        $( "#apellido1" ).focus();
+        return;	
+    }
+
+    if($( "#sexo" ).val() == ""){
+        alertify.set('notifier','position', 'top-center');
+        alertify.error("Determine Sexo");
+        $( "#sexo" ).focus();
+        return;	
+    }
+
+    if($( "#cumple" ).val() == ""){
+        alertify.set('notifier','position', 'top-center');
+        alertify.error("Determine Fecha Cumpleaños");
+        $( "#cumple" ).focus();
+        return;	
+    }
+
+    if($( "#reside" ).val() == ""){
+        alertify.set('notifier','position', 'top-center');
+        alertify.error("Determine Residencia");
+        $( "#reside" ).focus();
+        return;	
+    }
+
+    if($( "#codiUbi" ).val() == ""){
+        alertify.set('notifier','position', 'top-center');
+        alertify.error("Determine Ciudad");
+        $( "#codiUbi" ).focus();
+        return;	
+    }
+
+    if($( "#tel1" ).val() == ""){
+        alertify.set('notifier','position', 'top-center');
+        alertify.error("Determine Telefono Principal");
+        $( "#tel1" ).focus();
+        return;	
+    }
+
+    if($( "#celular" ).val() == ""){
+        alertify.set('notifier','position', 'top-center');
+        alertify.error("Determine Celular");
+        $( "#celular" ).focus();
+        return;	
+    }
+
+    if($( "#estciv" ).val() == ""){
+        alertify.set('notifier','position', 'top-center');
+        alertify.error("Determine Estado Civil");
+        $( "#estciv" ).focus();
+        return;	
+    }
+
+    if($( "#eps" ).val() == ""){
+        alertify.set('notifier','position', 'top-center');
+        alertify.error("Determine Eps");
+        $( "#eps" ).focus();
+        return;	
+    }
+
+    if($( "#tipoafi" ).val() == ""){
+        alertify.set('notifier','position', 'top-center');
+        alertify.error("Determine Tipo Afiliación");
+        $( "#tipoafi" ).focus();
+        return;	
+    }
+
+    if($( "#resp" ).val() == ""){
+        alertify.set('notifier','position', 'top-center');
+        alertify.error("Determine El Nombre Responsable");
+        $( "#resp" ).focus();
+        return;	
+    }
+
+    if($( "#dirresp" ).val() == ""){
+        alertify.set('notifier','position', 'top-center');
+        alertify.error("Determine La Dirección Responsable ");
+        $( "#dirresp" ).focus();
+        return;	
+    }
+
+    if($( "#parenresp" ).val() == ""){
+        alertify.set('notifier','position', 'top-center');
+        alertify.error("Determine El Parentesco Del Responsable ");
+        $( "#parenresp" ).focus();
+        return;	
+    }
+
+    if($( "#acomp" ).val() == ""){
+        alertify.set('notifier','position', 'top-center');
+        alertify.error("Determine El Acompañante ");
+        $( "#acomp" ).focus();
+        return;	
+    }
+
+    if($( "#telacomp" ).val() == ""){
+        alertify.set('notifier','position', 'top-center');
+        alertify.error("Determine El Telefono Acompañante ");
+        $( "#telacomp" ).focus();
+        return;	
+    }
+    $("#ndoc").prop( "disabled", false );
+    $("#tipoDoc").prop( "disabled", false );
+
+    $.post($('#formpaciente').attr("action"),$('#formpaciente').serialize(),
+    function(data, status){
+        if(data == "OK"){
+            alertify.set('notifier','position', 'top-center');
+            alertify.success("Se creo y/o edito exitosamente el paciente");
+        }else{
+            alertify.set('notifier','position', 'top-center');
+            alertify.error(data);
+        }   
+    });
+  };
+
+
+function calcularEdad(){
+    var hoy = new Date();
+    var cumpleanos = new Date($("#cumple").val());
+    var edad = hoy.getFullYear() - cumpleanos.getFullYear();
+    var m = hoy.getMonth() - cumpleanos.getMonth();
+    if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate())) {
+        edad--;
+    }
+    $("#edad").val(edad);
+  }
 
 function exportarPacientes(){
     $('#modalExportPacientes').modal('show');
@@ -314,6 +301,83 @@ function exporPacientesExcel(){
     var fechaInicio = $('#fechaInicio').val();
     var fechaFinal = $("#fechaFinal").val();
     location.href="./paciente/export_excel?feini="+fechaInicio+"&fefin="+fechaFinal
+}
+
+function showModalBuscarPacientes(){ 
+    $('#modalBuscarPaciente').modal('show');
+}
+
+function elegir(tipoDoc,ndoc){
+    $("#ndoc").val(ndoc);
+    $("#tipoDoc").val(tipoDoc);
+    cargarDatos();
+    calcularEdad();
+    $('#modalBuscarPaciente').modal('hide');
+}
+
+function cargarDatos(){
+    $.post('./paciente/buscarpaciente',{numero:$( "#ndoc" ).val(),tipoDoc:$("#tipoDoc").val()},
+    function(data, status){
+        if(data != 'null'){
+            var paciente =JSON.parse(data);
+            $.each(paciente, function(index, value){
+                $( "#"+index ).val(value);
+            });
+            $("#descripcionValoracion").val(paciente.valoracion);
+            $("#ndoc").prop( "disabled", true );
+            $("#tipoDoc").prop( "disabled", true );
+            calcularEdad();
+        }
+       
+    });
+  }
+
+function buscarPaciente(){
+    var inHTML = ""; 
+    var primerNombreBusqueda = $("#primerNombreBusqueda").val();
+    var primerApellidoBusqueda = $("#primerApellidoBusqueda").val();
+    var correoBusqueda = $("#correoBusqueda").val();
+    var telBusqueda = $("#telBusqueda").val();
+    var celBusqueda = $("#celBusqueda").val();
+    $.ajax({
+        method: "POST",
+        url: "./paciente/buscarpacientes",
+        data: { primerNombreBusqueda:primerNombreBusqueda , primerApellidoBusqueda:primerApellidoBusqueda,
+                correoBusqueda:correoBusqueda,telBusqueda:telBusqueda,celBusqueda:celBusqueda },
+        context: document.body})
+        .done(function(data) {  
+            if(data != 'NO_DATOS') {
+            inHTML +='<table class="table table-bordered">'+
+            '<thead>'+
+            '<tr>'+
+                '<th>Documento</th>'+
+                '<th>Nombre</th>'+
+                '<th>Apellido</th>'+
+                '<th>Telefono</th>'+
+                '<th>Celular</th>'+
+                '<th>Accion</th>'+
+            '</tr>'+
+            '</thead>'+
+            '<tbody>'
+            $.each(JSON.parse(data), function(index, value){     
+                var newItem = "<tr>"+
+                "<td>"+ value.ndoc +"</td>"+
+                "<td>"+ value.nombre1+" "+value.nombre2+"</td>"+
+                "<td>"+value.apellido1 +" "+value.apellido2 +"</td>"+
+                "<td>"+ value.tel1 +"</td>"+
+                "<td>"+ value.celular +"</td>"+
+                "<td><a onclick='elegir(\""+value.tipodoc+"\",\""+value.ndoc+"\");' href='#'>Elegir</a></td>"+     
+                "</tr>"
+                    inHTML += newItem;
+                }); 
+                inHTML +='</tbody></table>';
+                $("div#resultadoBusquedaPaciente").html(inHTML);
+            }else{
+                alertify.set('notifier','position', 'top-center');
+                alertify.error("No se Encontraron Coincidencias con los datos ingresados");
+            }    
+                
+    });
 }
 
 

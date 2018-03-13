@@ -109,7 +109,11 @@ class Cita extends CI_Controller {
             $observacion_corta = $row->observa ;
             if($observacion_corta != ""){ 
              $observacion_corta = substr($row->observa,0,20) ;
-            }    
+            }
+            $telefono = $row->telefono;
+            if($this->session->userdata('rol') < 4 ){
+                $telefono = $row->nro_documento;
+            }
             $objetoTemporal = (object) array(  'nroDocumento' => $row->nro_documento,
                                                 'primerNombre' => $row->primer_nombre,
                                                 'segundoNombre' => $row->segundo_nombre,
@@ -127,7 +131,9 @@ class Cita extends CI_Controller {
                                                 'correo' => $row->correo,
                                                 'celular' => $row->celular,
                                                 'color' => $row->color,
-                                                'telefono' => $row->telefono);
+                                                'usuini' => $row->usuini,
+                                                'usult' => $row->usult,
+                                                'telefono' => $telefono);
              $citas[$row->hora] = $objetoTemporal;
         }
 
@@ -153,6 +159,8 @@ class Cita extends CI_Controller {
                                     'tipoConsulta' => '',
                                     'estadoConsulta' => '',
                                     'medio' => '',
+                                    'usuini' => '',
+                                    'usult' => '',
                                     'fechaNacimiento' => '',
                                     'color' => 'white',
                                     'hora' => $row->hora);
@@ -176,6 +184,8 @@ class Cita extends CI_Controller {
                                         'tipoConsulta' => '',
                                         'estadoConsulta' => '',
                                         'medio' => '',
+                                        'usuini' => '',
+                                        'usult' => '',
                                         'fechaNacimiento' => '',
                                         'color' => 'white',
                                         'hora' => $hora);
@@ -305,6 +315,8 @@ class Cita extends CI_Controller {
                                                 'hora' => $row->hora,
                                                 'idUnicoCita' => $row->id_cita,
                                                 'correo' => $row->correo,
+                                                'usuini' => $row->usuini,
+                                                'usult' => $row->usult,
                                                 'celular' => $row->celular,
                                                 'telefono' => $row->telefono);
 
@@ -380,7 +392,7 @@ class Cita extends CI_Controller {
             }
             
             if($_POST["crearUsuario"] == 'true'){
-                $pacienteBD = $this->paciente_model->get_paciente($nroDocumento);
+                $pacienteBD = $this->paciente_model->get_paciente($nroDocumento,$tipoDoc);
                 if(!isset($pacienteBD)){ 
                     $paciente = array(
                         'nombre1' => $primerNombre,
@@ -460,8 +472,11 @@ class Cita extends CI_Controller {
         $nombre = $_REQUEST["primerNombreBusqueda"];
         $documento = $_REQUEST["nroDocumentoBusqueda"];
         $correo = $_REQUEST["correoBusqueda"]; 
+        $celular = $_REQUEST["celBusqueda"]; 
+        $telefono = $_REQUEST["telBusqueda"]; 
         
-        $resultado_citas_paciente = $this->cita_model->get_citas_paciente($fechaInicio,$fechaFinal,$nombre,$correo,$documento);
+        $resultado_citas_paciente = $this->cita_model->get_citas_paciente($fechaInicio,$fechaFinal,$nombre,
+                                                            $correo,$documento,$celular,$telefono);
         
         if(isset($resultado_citas_paciente)){
             $citasEncontradas = array();
@@ -477,6 +492,7 @@ class Cita extends CI_Controller {
                                                     'segundoApellido' => $row->segundo_apellido,
                                                     'observacion' => $row->observa,
                                                     'tipoConsulta' => $row->tipo_consulta,
+                                                    'tipoViejo' => $row->tipo_viejo,
                                                     'estadoConsulta' =>$row->estado
                                                     );
                     $citasEncontradas[] = $objetoTemporal;
@@ -510,6 +526,8 @@ class Cita extends CI_Controller {
                                                     'usult' => $row->usult,
                                                     'idArea' => $row->id_area,
                                                     'idsede' => $row->id_sede,
+                                                    'lugar' => $row->nombre_corto,
+                                                    'nombre_sede' => $row->nombre_sede,
                                                     'nroDocumento' => $row->nro_documento,
                                                     'primerNombre' => $row->primer_nombre,
                                                     'segundoNombre' => $row->segundo_nombre,
@@ -541,12 +559,28 @@ class Cita extends CI_Controller {
         $fecha = $_REQUEST["fecha"];
         $resultadocitas = $this->cita_model->get_citas_excel($fecha,$id_area,$id_sede);
 
-        $fields = array("tipoDoc","nro_documento","nombre","fecha","fecha_sol",
-                        "pvez","usuini","usult");
+        $fields = array("tipoDoc","nro_documento","nombre","Apellidos","fecha","fecha_sol",
+                        "pvez","usuini","usult","tipo_consulta","Tipo Anterior","observa","estado","telefono","celular","correo");
         $nombre_archivo="citas_".$fecha;
-        to_excel($fields, $resultadocitas , $nombre_archivo);
-
-        
+        to_excel($fields, $resultadocitas , $nombre_archivo);    
     } 
-    
+
+
+    function impresion_agenda(){
+        $this->load->library('mydompdf');
+        $fecha =  $_REQUEST["fecha"];
+        $id_sede =$_REQUEST["sede"];
+        $id_area =$_REQUEST["lugar"];
+        $fecha_date = new DateTime($fecha);
+        $resultadocitas = $this->cita_model->get_citas($fecha,$id_area,$id_sede);
+        $data["empresa"] = $this->administracion_model->get_datos_empresa();
+        $data["citas"] = $this->cita_model->get_citas($fecha,$id_area,$id_sede);
+        $data["lugar"] = $this->cita_model->get_lugar_sede($id_sede,$id_area);
+        $data["fecha"] = $fecha_date;
+        $data["sede"] = $this->administracion_model->get_sede($id_sede);
+        $html = $this->load->view('aplicacion/pdf/citas_pdf', $data, true);
+        $this->mydompdf->load_html($html);
+        $this->mydompdf->render();
+        $this->mydompdf->stream("Citas_".$fecha.".pdf", array("Attachment" => false));     
+    }
 }

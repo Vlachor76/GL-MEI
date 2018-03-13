@@ -12,11 +12,13 @@
                   
               </td>
               <td id="header_texto">
-                  <div>Centro Estético</div>
+                  <div><?php echo $empresa->slogan ?></div>
+                  <div><?php echo $empresa->dir ?></div>
+                  <div><?php echo $empresa->tel ?></div>
               </td>
               <td id="header_logos">
-                  <h4>Historia Medica</h4>
-                  <h4><?php echo date('Y-m-d H:i:s', time()) ?> </h4>
+                  <h5>Historia Medica</h5>
+                  <h5><?php echo date('Y-m-d H:i:s', time()) ?> </h5>
                   <b>Historia</b>
                  <?php echo $paciente->tipodoc; ?>
                  <?php echo $paciente->ndoc; ?>
@@ -24,7 +26,7 @@
           </tr>
       </table>
       <hr>
-<h2>Identificación</h2>
+<p>IDENTIFICACION DEL PACIENTE</p>
 <table style="width:100%">
   <tr>
     <td><b>Nombres</b></td>
@@ -38,7 +40,7 @@
     <td><?php echo $paciente->ndoc; ?></td>
     <td><b>Sexo</b></td>
     <td><?php echo $paciente->sexo; ?></td>
-    <td><b>Fecha Nacimiento</b></td>
+    <td><b>F Nacimiento</b></td>
     <td><?php echo $paciente->cumple; ?></td>
     <td><b>Edad</b></td>
     <td><?php echo $paciente->edad; ?> Años</td>
@@ -84,30 +86,32 @@
 <hr>
   </header>
   <footer>
-      <div id="footer_texto"></div>
+      <div id="footer_texto"> <br> <div><?php echo $empresa->texto ?></div> <div>NIT:<?php echo $empresa->NIT ?></div> </div>
   </footer>
 
 
   <div>
     <?php foreach ($historias as $historia) { ?>
-     <h3><?php echo $historia->fecha ?> NOTA MEDICA <?php echo nl2br($historia->nombre1 ." ".$historia->nombre2 ." ".$historia->apellido1  ." ".$historia->apellido2); ?></h3>
-     <h2>MOTIVO DE CONSULTA</h2>
+     <h4><?php echo $historia->fecha ?> NOTA MEDICA <?php echo nl2br($historia->nombre1 ." ".$historia->nombre2 ." ".$historia->apellido1  ." ".$historia->apellido2); ?></h4>
+     <p>MOTIVO DE CONSULTA</p>
      <?php echo nl2br($historia->motivo); ?>
      <br>
-     <h2>ANTECEDENTES</h2>
+     <p>ANTECEDENTES</p>
      <?php echo  nl2br($historia->antecedentes); ?>
-     <h2>EXAMEN FISICO</h2>
+     <p>EXAMEN FISICO</p>
      <?php echo nl2br($historia->examen); ?>
-     <h2>SIGNOS VITALES</h2>
+     <p>SIGNOS VITALES</p>
      <?php echo nl2br($historia->signos); ?>
+     <p>REVISION POR SISTEMA</p>
+     <?php echo nl2br($historia->revision); ?>
      <br>
-     <h2>DIAGNOSTICO</h2>
+     <p>DIAGNÓSTICO</p>
      <?php echo nl2br($historia->codiag ." . ".$historia->diagnostico); ?>
      <br>
-     <h2>PROCEDIMIENTO</h2>
+     <p>PROCEDIMIENTO</p>
      <?php echo nl2br($historia->coproc ." . ".$historia->procedimiento); ?>
      <br>
-     <h2>CONDUCTA ALTA</h2>
+     <p>CONDUCTA DE ENTRADA</p>
      <?php echo nl2br($historia->conducta); ?>
      <br>
     <?php };?>    
@@ -118,7 +122,7 @@
     <?php foreach ($evoluciones as $evolucion) { ?>
     <br><br>
      <h3><?php echo $evolucion->fecha ?> NOTA EVOLUCION <?php echo nl2br($evolucion->nombre1 ." ".$evolucion->nombre2 ." ".$evolucion->apellido1  ." ".$evolucion->apellido2); ?> </h3>
-     <h2>EVOLUCION</h2>
+     <p>EVOLUCION</p>
      <?php echo  $evolucion->evol ?> 
      <br>  
      <?php }?>

@@ -26,6 +26,13 @@ class Administracion_model extends CI_Model {
         return $query->result();
     }
 
+
+    // Funcion obtiene los datos de la empresa
+    function get_datos_empresa() {
+        $query = $this->db->get('sedegen');
+        return $query->row();
+    }
+
     // Funcion obtiene los municipios de  cada sede
     function get_municipios() {
         $query = $this->db->get('municipios');
@@ -53,6 +60,14 @@ class Administracion_model extends CI_Model {
         $this->db->like('codigo', $cod_proc);
         $query = $this->db->get('cups_proc',7);
         return $query->result();
+    }
+
+
+    // Funcion obtiene una sede especifica
+    function  get_sede($id_sede) {
+        $this->db->like('id_sede', $id_sede);
+        $query = $this->db->get('sedes');
+        return $query->row();
     }
 
 }

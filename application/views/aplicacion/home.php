@@ -30,7 +30,7 @@
 		</nav>
 		
 		<?php if(isset($mensaje)) { ?>
-		   <h1 style="color:#B61F24;"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>  <?php echo $mensaje  ?></h1>
+		   <h4 style="color:#B61F24;"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>  <?php echo $mensaje  ?></h4>
 		<?php } ?>
 
 </body>

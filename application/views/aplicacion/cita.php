@@ -38,7 +38,7 @@
 			<input type="hidden" id="id_sede"    value="<?php echo $this->session->userdata('id_sede'); ?>">
 			<input type="hidden" id="rol"    value="<?php echo $this->session->userdata('rol'); ?>">
 				<select name="sedeSeleccionada" id="sedeSeleccionada">
-	                <option value="1">Consultorio</option>
+				   <option value="1">Consultorio</option>
 				</select>
 				<select name="selectorLugares" id="selectorLugares">
 				</select>
@@ -51,7 +51,11 @@
 				<div class="grupo">
 						<div class="hora">hora</div>
 						<div class="paciente">Paciente</div>
-						<div class="telefono">Telefono</div>
+						<?php if($this->session->userdata('rol') < 4 ) {  ?>
+						  <div class="telefono">Documento</div>
+						<?php }else{  ?>
+						   <div class="telefono">Telefono</div>
+						<?php }  ?>
 						<div class="paciente">Observación</div>
 						<div class="tipo">Est</div>
 						<div class="espacio"></div>
@@ -117,7 +121,8 @@
 										<input type="text" id="segundoApellido" placeholder="">
 									</label>
 
-									<label>Telefono
+									<?php if($this->session->userdata('rol') > 3 ) {  ?>
+										<label>Telefono
 										<input type="text" id="telefono" placeholder="">
 									</label>
 									<label>Celular
@@ -125,7 +130,11 @@
 									</label>
 									<label>Correo
 										<input type="text" id="correo" placeholder="">
-									</label>									
+									</label>
+									<?php }  ?>
+
+									
+
 									<label>Observación
 										<input type="text" id="observacion" placeholder="">
 									</label>
@@ -137,7 +146,7 @@
 									</label>
 									<label>Tipo
 										<select id="tipoConsulta">
-										<option value="BQ">Bloqueado, no dar citas varios</option>
+											<option value="BQ">Bloqueado, no dar citas varios</option>
 											<option value="CM">Consulta Medica</option>
 											<option value="CR">Consulta Revisión</option>
 											<option value="TT">Tratamiento</option>
@@ -146,7 +155,7 @@
 									</label>
 									<label>Estado
 										<select id="estadoConsulta">
-										   <option value="I">Nota Importante</option>
+										<option value="I">Nota Importante</option>
 											<option value="V">Visto</option>
 											<option value="C">Confirmado</option>
 											<option value="X">Inasistio</option>
@@ -219,15 +228,20 @@
 				</div>
 				<div class="modal-body" style="height: 550px"	>
 					<form class="formularios" accept-charset="utf-8" style="padding: 0;">
-						
 						<label>Nro de Documento
 							<input type="text" id="nroDocumentoBusqueda"  >
 						</label>
 						<label>Primer Nombre
 							<input type="text" id="primerNombreBusqueda"  placeholder="">
 						</label>
-						<label>Correo
+						<label>Telefono
+							<input type="text" id="telBusqueda" placeholder="">
+						</label>
+						<label style="width:45% !important">Correo
 							<input type="text" id="correoBusqueda" placeholder="">
+						</label>
+						<label style="width:45% !important">Celular
+							<input type="text" id="celBusqueda" placeholder="">
 						</label>
 						<label>Fecha Inicio
 							<input type="date" id="fechaInicio" placeholder="">
@@ -239,7 +253,7 @@
 						<button type="button" title="Buscar Cita" onclick="buscarCita();" style="margin-top: 20px;" class="botonesModal icon-eye"></button>									
 					   </label>
 					</form>
-					<div id="resultadoBusquedaCitas" class="table-responsive" style="max-height: 350px;margin-top: 140px;">
+					<div id="resultadoBusquedaCitas" class="table-responsive" style="max-height: 300px;margin-top: 210px;">
 					</div>
 				</div>
 			</div>  

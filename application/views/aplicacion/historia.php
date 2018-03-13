@@ -4,6 +4,8 @@
 	<meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
+    <link rel="shortcut icon" href="<?php echo base_url(); ?>images/favicon.ico" />
+
     <title>SiipsWEB Historia</title>
 
     <!-- Lib Ext css -->
@@ -27,6 +29,7 @@
 	<li  ><a href="<?php echo base_url(); ?>cita"  title="">Agenda Citas</a></li>
 	<li><a href="<?php echo base_url(); ?>paciente" title="" >Pacientes</a></li>
 	<li class="active"><a href="<?php echo base_url(); ?>historia" title="" >Historia</a></li>
+	<li><a href="<?php echo base_url(); ?>paquete" title="" >Paquetes</a></li>
 	<li><a href="<?php echo base_url(); ?>usuario" title="" >Usuarios</a></li>
 </ul>
 <ul class="nav navbar-nav navbar-right">
@@ -48,7 +51,7 @@
     </label>
     <label>
         Fact
-        <input type="text" id="fact" placeholder="Factura">
+        <input type="text" id="fact"  name="factura" placeholder="Factura">
     </label>
     <label>Nombre
         <div id="nombre"> </div>
@@ -114,7 +117,7 @@
         </label>
 
         <label>Revision por Sistema
-            <textarea style="margin-top: 19px;" name="revision" >NEGATIVOS</textarea>
+            <textarea style="margin-top: 19px;" name="revision">Negativos</textarea>
         </label>
         <div class="svitales">
             <label>Examen Fisico
@@ -178,25 +181,25 @@
             <textarea name="diagnostico"  id="diagnostico"></textarea>
         </label>
         <label>Medicamentos
-            <textarea id="medicamentos" >NINGUNO</textarea>
+            <textarea id="medicamentos" >Ninguno</textarea>
         </label>
         <label>
         <div class="svitales">
             <label>Diagnostico 2
-                <input type="text" class="diag" name="codiag2" value="" placeholder="">
+                <input type="text" class="diag" name="codiag2" id="codiag2" value="" placeholder="">
             </label>
             <label>Diagnostico 3
-                <input type="text" class="diag" name="codiag3" value="" placeholder="">
+                <input type="text" class="diag" name="codiag3" id="codiag3" value="" placeholder="">
             </label>
             <label>Diagnostico 4
-                <input type="text" class="diag" name="codiag4" value="" placeholder="">
+                <input type="text" class="diag" name="codiag4" id="codiag4" value="" placeholder="">
             </label>
         </div>
-            <textarea name="diagnostico2"></textarea>
+            <textarea name="diagnostico2" id="diagnostico2"></textarea>
         </label>
         <div style="width: 100%; border-bottom: solid 1px #000; float: left;"></div>
         <label>Conducta De Entrada Y Tratamiento
-            <textarea style="margin-top: 19px;" name="conducta" ></textarea>
+            <textarea style="margin-top: 19px;" name="conducta"></textarea>
         </label>
         <label><div class="svitales">
             <label>Procedimiento</label>
@@ -243,7 +246,7 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<h4 class="modal-title">Historia General</h4>
+					<h4 class="modal-title">Historia clínica y registros asistenciales</h4>
 				</div>
 				<div class="modal-body">
 				<div align="center" >		
@@ -254,8 +257,11 @@
                     <div class="form-group">
                         <textarea class="form-control" rows="15" id="evoluciones"></textarea>
                     </div>
-				   <div class="row" style="width: 80%;">
-                   <ul class="pager">
+				    <div class="row" style="width: 80%;">
+                    <input type="checkbox" class= "chkVisor" id="chk1" value="1">Historia Clínica<br>
+                    <input type="checkbox" class= "chkVisor" id="chk2" value="2" checked>Notas enfermería<br>
+                    <input type="checkbox" class= "chkVisor" id="chk3" value="3" checked>Notas cosmetología<br>
+                    <ul class="pager">
                         <li class="previous">
                             <button  id="cargarPrimeraSesion" type="button" class="botonesModal">
                                 <span class="glyphicon glyphicon-fast-backward"></span>

@@ -9,7 +9,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <meta charset="utf-8">
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, user-scalable=no">
-    <meta name="description" content="">
+    <meta name="description" content="Citas Centro Medico">
 	<meta name="author" content="">
 	<meta name="copyright" content="© 2018" />
      <!-- Lib Ext css -->
@@ -31,7 +31,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <input type="text"  id="usuario"  name="usuario" placeholder="NOMBRE DE USUARIO" maxlength="10">
                 <input type="password" id="contrasena" name="contrasena" placeholder="CONTRASEÑA" maxlength="10">
                 <select id="sede" name="sede">
-                <option value="1">Consultorio</option>
+                    <option value="1">Consultorio</option>
                 </select>
                 <button type="button" id="ingresarSistema">Entrar</button>
             </form>

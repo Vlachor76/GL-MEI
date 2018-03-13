@@ -69,7 +69,8 @@ class Paciente extends CI_Controller {
      */
     function buscarpaciente() {
         $nro_identidad =  $_REQUEST["numero"];
-        $paciente = $this->paciente_model->get_paciente($nro_identidad);
+        $tipoDoc =  $_REQUEST["tipoDoc"];
+        $paciente = $this->paciente_model->get_paciente($nro_identidad,$tipoDoc);
         echo json_encode($paciente);
     }
 
@@ -82,7 +83,8 @@ class Paciente extends CI_Controller {
      */
     function crear_paciente() {
         $nro_identidad =  $_REQUEST["ndoc"];
-        $pacienteBuscado = $this->paciente_model->get_paciente($nro_identidad);
+        $tipoDoc =  $_REQUEST["tipoDoc"];
+        $pacienteBuscado = $this->paciente_model->get_paciente($nro_identidad,$tipoDoc);
 
         if(isset($pacienteBuscado)){
             $datosPaciente =  $_POST;
@@ -156,10 +158,36 @@ class Paciente extends CI_Controller {
         $feini = $_REQUEST["feini"];
         $fefin = $_REQUEST["fefin"];
         $resultadoPacientes = $this->paciente_model->get_pacientes_excel($feini,$fefin);
-        $fields = array("CUMPLE","DIA_CUMPLE","MES_CUMPLE","EDAD","TIPO_DOC","N_DOC","NOMBRES",
-                        "APELLIDOS","EMAIL","TEL1","TEL2","CELULAR","RESIDE");
+        $fields = array();
+        foreach ($resultadoPacientes->field_data() as $value) {
+            $fields[] = $value->name;
+        }
         $nombre_archivo="pacientes_".$feini."-".$fefin;
-        to_excel($fields, $resultadoPacientes , $nombre_archivo);        
+        to_excel($fields, $resultadoPacientes->result() , $nombre_archivo);        
     } 
+
+
+    /**
+     * function buscarpacientes
+     *
+     * Funcion buscarpacientes busca paciente por diferentes variables 
+     * telefono , apellido , correo , 
+     *
+     */
+    function buscarpacientes(){
+        $nombre = $_REQUEST["primerNombreBusqueda"];
+        $apellido = $_REQUEST["primerApellidoBusqueda"];
+        $correo = $_REQUEST["correoBusqueda"]; 
+        $celular = $_REQUEST["celBusqueda"]; 
+        $telefono = $_REQUEST["telBusqueda"]; 
+
+        $resultado_pacientes = $this->paciente_model->get_pacientes($nombre,$apellido,$correo,$celular,$telefono);
+        if(isset($resultado_pacientes)){
+            echo json_encode($resultado_pacientes);
+        }else{
+            echo "NO_DATOS";
+        }
+    }
+
 
 }

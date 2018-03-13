@@ -80,12 +80,12 @@ function llenarGrillaCitas(){
         .done(function(data) {  
             listadoCitas = data;
             $.each(JSON.parse(listadoCitas), function(index, value){     
-                var newItem ="<div class='grup' style='background:"+value.color+"'>"+
-                "<div class='hora'><a  onclick='showModalTomarCita("+index+")'  >"+ value.hora +"</a></div>"+
-                "<div class='paciente' onclick='showModalTomarCita("+index+")' >"+value.primerNombre +" "+value.primerApellido +"</div>"+
-                "<div class='telefono' onclick='showModalTomarCita("+index+")' >"+(value.telefono?value.telefono:"")+"</div>"+
-                "<div class='paciente' onclick='showModalTomarCita("+index+")' >"+value.observacion+"</div>"+
-                "<div class='tipo'     onclick='showModalTomarCita("+index+")' >"+(value.estadoConsulta?value.estadoConsulta:"")+"</div>"+
+                var newItem ="<div class='grup'>"+
+                "<div style='background:"+value.color+" class='hora'><a  onclick='showModalTomarCita("+index+")'  >"+ value.hora +"</a></div>"+
+                "<div style='background:"+value.color+" class='paciente' onclick='showModalTomarCita("+index+")' >"+value.primerNombre +" "+value.primerApellido +"</div>"+
+                "<div style='background:"+value.color+" class='telefono' onclick='showModalTomarCita("+index+")' >"+(value.telefono?value.telefono:"")+"</div>"+
+                "<div style='background:"+value.color+" class='paciente' onclick='showModalTomarCita("+index+")' >"+value.observacion+"</div>"+
+                "<div style='background:"+value.color+" class='tipo'     onclick='showModalTomarCita("+index+")' >"+(value.estadoConsulta?value.estadoConsulta:"")+"</div>"+
                 "<div class='espacio'>  </div>"+
                 "<div class='prof' onclick='cambiarLugar(1)' >"+(value.lugar1?value.lugar1:"")+"</div>"+
                 "<div class='prof' onclick='cambiarLugar(2)' >"+(value.lugar2?value.lugar2:"")+"</div>"+
@@ -160,12 +160,14 @@ function buscarCita(){
     var primerNombreBusqueda = $("#primerNombreBusqueda").val();
     var nroDocumentoBusqueda = $("#nroDocumentoBusqueda").val();
     var correoBusqueda = $("#correoBusqueda").val();
+    var telBusqueda = $("#telBusqueda").val();
+    var celBusqueda = $("#celBusqueda").val();
     $.ajax({
         method: "POST",
         url: "./cita/buscarcitas",
         data: { fechaFinal: fechaFinal ,sede: sede , fechaInicio :fechaInicio,
                 primerNombreBusqueda:primerNombreBusqueda , nroDocumentoBusqueda:nroDocumentoBusqueda,
-                correoBusqueda:correoBusqueda },
+                correoBusqueda:correoBusqueda,telBusqueda:telBusqueda,celBusqueda:celBusqueda },
         context: document.body})
         .done(function(data) {  
             if(data != 'NO_DATOS') {
@@ -175,20 +177,26 @@ function buscarCita(){
                 '<th>hora</th>'+
                 '<th>Documento</th>'+
                 '<th>Paciente</th>'+
+                '<th>Tipo</th>'+
                 '<th>Estado</th>'+
                 '<th>Fecha</th>'+
                 '<th>Accion</th>'+
             '</tr>'+
             '</thead>'+
             '<tbody>'
-            $.each(JSON.parse(data), function(index, value){     
+            $.each(JSON.parse(data), function(index, value){
+                var accion = "<td><a onclick='irAgenda(\""+value.fecha+"\",\""+value.idArea+"\",\""+value.idsede+"\");' href='#'>Ir Agenda</a></td>"
+                if(value.estadoConsulta == "E"){
+                    accion = "<td>Cita Eliminada</td>";   
+                };    
                 var newItem = "<tr>"+
                 "<td>"+ value.hora +"</td>"+
                 "<td>"+ value.nroDocumento +"</td>"+
                 "<td>"+value.primerNombre +" "+value.primerApellido +"</td>"+
+                "<td>"+value.tipoConsulta+" | "+value.tipoViejo+"</td>"+
                 "<td>"+ value.estadoConsulta +"</td>"+
                 "<td>"+ value.fecha +"</td>"+
-                "<td><a onclick='irAgenda(\""+value.fecha+"\",\""+value.idArea+"\",\""+value.idsede+"\");' href='#'>Ir Agenda</a></td>"+     
+                accion+
                 "</tr>"
                     inHTML += newItem;
                 }); 
@@ -222,6 +230,8 @@ function buscarCitasEliminadas(){
                 '<th>hora</th>'+
                 '<th>Documento</th>'+
                 '<th>Paciente</th>'+
+                '<th>Sede</th>'+
+                '<th>Lugar</th>'+
                 '<th>Fecha Eliminada</th>'+
                 '<th>Observación</th>'+
                 '<th>Usuario</th>'+
@@ -233,6 +243,8 @@ function buscarCitasEliminadas(){
                 "<td>"+ value.hora +"</td>"+
                 "<td>"+ value.nroDocumento +"</td>"+
                 "<td>"+value.primerNombre +" "+value.primerApellido +"</td>"+
+                "<td>"+ value.nombre_sede +"</td>"+
+                "<td>"+ value.lugar +"</td>"+
                 "<td>"+ value.fecha_ult +"</td>"+
                 "<td>"+ value.observacion +"</td>"+
                 "<td>"+ value.usult +"</td>"+
@@ -251,26 +263,39 @@ function buscarCitasEliminadas(){
 
 
 /**
- * BUscar datos paciente si existe en base de datos
+ * Busca paciente si cambia la identificacion 
  */
 $( "#nroDocumento" ).change(function() {
-$.post('./paciente/buscarpaciente',{numero:$( "#nroDocumento" ).val()},
-function(data, status){
-    if(data != 'null'){
-        var paciente =JSON.parse(data);
-        $( "#primerNombre").val(paciente.nombre1);
-        $( "#segundoNombre").val(paciente.nombre2);
-        $( "#primerApellido").val(paciente.apellido1);
-        $( "#segundoApellido").val(paciente.apellido2);
-        $( "#telefono").val(paciente.tel1);
-        $( "#celular").val(paciente.celular);
-        $( "#correo").val(paciente.email);
-        $( "#fechaNacimiento").val(paciente.cumple);
-        $( "#crearUsuario").val("false");
-    }
-    
+    buscarPaciente();
 });
+
+/**
+ * Busca paciente si cambia el valor del tipo de identificacion
+ */
+$( "#tdocumento" ).change(function() {
+    buscarPaciente();
 });
+
+/**
+ * buscarPaciente funcion ajax que busca los datos del paciente por tipo de identificacion e identificacion
+ */
+function buscarPaciente(){
+    $.post('./paciente/buscarpaciente',{numero:$( "#nroDocumento" ).val(),tipoDoc:$("#tdocumento").val()},
+     function(data, status){
+            if(data != 'null'){
+                var paciente =JSON.parse(data);
+                $( "#primerNombre").val(paciente.nombre1);
+                $( "#segundoNombre").val(paciente.nombre2);
+                $( "#primerApellido").val(paciente.apellido1);
+                $( "#segundoApellido").val(paciente.apellido2);
+                $( "#telefono").val(paciente.tel1);
+                $( "#celular").val(paciente.celular);
+                $( "#correo").val(paciente.email);
+                $( "#fechaNacimiento").val(paciente.cumple);
+                $( "#crearUsuario").val("false");
+        }  
+  });
+}
 
 function irAgenda(fecha,idarea,idsede){
     $("#sedeSeleccionada").val(idsede.trim());
@@ -354,6 +379,10 @@ function verificarCita(obj){
             $('#accion').val('move');
             $('#idCitaUnico').val(obj.idUnicoCita);    
         }
+
+        if(obj.usuini != '' ){
+            titulo = "Tomar Cita  "+ fechaSolicitadaTem +"  "+obj.hora+" [ Usuario Creación :"+obj.usuini+" - Modificación:"+obj.usult+"]";
+        }
         
         $('#tituloModalCita').text(titulo);
         $('#idCitaUnicoEliminar').val(obj.idUnicoCita);  
@@ -366,8 +395,8 @@ function verificarCita(obj){
         $('#celular').val(obj.celular);
         $('#correo').val(obj.correo);
         $('#observacion').val(obj.observacion);
-        $('#tipoConsulta').val((obj.tipoConsulta?obj.tipoConsulta:"CM"));
-        $('#estadoConsulta').val((obj.estadoConsulta?obj.estadoConsulta:"I"));
+        $('#tipoConsulta').val((obj.tipoConsulta?obj.tipoConsulta:"C"));
+        $('#estadoConsulta').val((obj.estadoConsulta?obj.estadoConsulta:"P"));
         $('#medio').val((obj.medio?obj.medio:""));
         $('#fechaNacimiento').val(obj.fechaNacimiento);
         $('#tipo_viejo').val(obj.tipoViejo);
@@ -418,10 +447,6 @@ function verificarCita(obj){
 
 $("#myModal").on('hidden.bs.modal', function () {
     $('#vista').prop('checked', false); 
-    eliminarEdicion();
-});
-
-function eliminarEdicion(){
     $.ajax({
         method: "POST",
         url: "./cita/eliminaredicion",
@@ -430,23 +455,7 @@ function eliminarEdicion(){
         context: document.body})
         .done(function(data) {     
         });
-}
-
-
-
-
-$("#nroDocumento").dblclick(function() {
-    var rol = $("#rol").val();
-    var tipoId = $("#tdocumento").val();
-    var identidad = $("#nroDocumento").val();
-    eliminarEdicion();
-    if(rol > 4){
-        location.href="./paciente?tipo="+tipoId+"&iden="+identidad;
-    }else{
-        location.href="./historia?tipo="+tipoId+"&iden="+identidad;
-    }
-  });
-
+});
 
 
 function eliminarCita(){
@@ -582,17 +591,19 @@ function validarFormularioModal(){
         $('#primerApellido').focus();
         return false;		
     } 
+    if($('#fechaNacimiento').val() == ""){
+        alertify.set('notifier','position', 'top-center');
+        alertify.error("Determine fecha Nacimiento");
+        $('#fechaNacimiento').focus();
+        return false;		
+    } 
     return true;
 }
 
 
 function imprimir(){
-    var contenido= document.getElementById("divCitas").innerHTML;
-    var contenidoOriginal= document.body.innerHTML;
-
-    document.body.innerHTML = contenido;
-
-    window.print();
-
-    document.body.innerHTML = contenidoOriginal;
+    var sede = $("#sedeSeleccionada").val();
+    var lugar = $("#selectorLugares").val();
+    var fecha = $("#fechaGrilla").val();
+    window.open("./cita/impresion_agenda?lugar="+lugar+"&sede="+sede+"&fecha="+fecha, '_blank');
 }

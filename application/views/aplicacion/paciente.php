@@ -28,6 +28,7 @@
 	<li  ><a href="<?php echo base_url(); ?>cita"  title="">Agenda Citas</a></li>
 	<li class="active" ><a href="<?php echo base_url(); ?>paciente" title="" >Pacientes</a></li>
 	<li><a href="<?php echo base_url(); ?>historia" title="" >Historia</a></li>
+	<li><a href="<?php echo base_url(); ?>paquete" title="" >Paquetes</a></li>
 	<li><a href="<?php echo base_url(); ?>usuario" title="" >Usuarios</a></li>
 </ul>
 <ul class="nav navbar-nav navbar-right">
@@ -63,7 +64,7 @@
 					</select>
 					<input type="date" id="cumple" name="cumple" placeholder="F. Cumpleaños" >
 					<input type="number" id="edad" name="edad" placeholder="Edad">
-					<input id="reside" type="text" name="reside" placeholder="Dirección Residencia">
+					<select id="lugarnac" name="lugarnac"></select>
 				</fieldset>
 				<fieldset>
 					<legend>Información de Contacto</legend>
@@ -72,9 +73,11 @@
 						<option value="envigado">Envigado</option>
 						<option value="0000">Pendiente</option>
 					</select>
+					<input type="hidden" name="municipio" id="municipio">
+					<input id="reside" type="text" name="reside" placeholder="Dirección Residencia">
 					<input type="text" id="tel1"  name="tel1" placeholder="Telefono 1">
 					<input type="text" id="tel2"  name="tel2" placeholder="Telefono 2">
-					<input id="celular" type="text" name="celular" placeholder="Celular">
+					<input type="text" id="celular"  name="celular" placeholder="Celular">
 					<select id="estciv" name="estciv">
 						<option value="SOLTERO/A">Soltero(a)</option>
 						<option value="CASADO/A">Casado(a)</option>
@@ -140,14 +143,15 @@
 					<input id="id_tipocir"  name="id_tipocir" type="text" placeholder="Procedimiento">
 					<input id="refpor"  name="refpor" type="text" placeholder="Referido Por">
 					<?php if($permisos == "EDITAR") {  ?>
-							<button id="registrarpaciente" type="button" class="icon-save" title="Registrar"></button>
-							<button id="valorarPaciente" data-toggle="modal" data-target="#modalValoracion" type="button" class="icon-clipboard" title="Valoracion"></button>
+						<button onclick="registrarpaciente()" type="button" class="icon-save" title="Registrar"></button>
+						<button id="valorarPaciente" data-toggle="modal" data-target="#modalValoracion" type="button" class="icon-clipboard" title="Valoracion"></button>
 					<?php } ?>
 					<?php if($this->session->userdata('rol') == "6") {  ?>
-						<button type="button" title="Cambiar Identificación" onclick="cambiarIdentificacion();"><span class="icon-refresh-ccw"></span></button>
+						<button type="button" title="Cambiar Identificación" onclick="cambiarIdentificacion();" class="icon-refresh-ccw" ></button>
 					<?php } ?>
-					<button type="button" title="Exportar Citas" onclick="exportarPacientes();"><span class="icon-grid"></span></button>
-							<button id="limpiarFormPacientes" type="button" onclick="" class="icon-file" title="Limpiar Formulario"></button>
+					<button type="button" title="Exportar Pacientes" onclick="exportarPacientes();"  class="icon-grid" ></button>
+					<button type="button" title="Buscar Pacientes" onclick="showModalBuscarPacientes();" class="icon-eye" ></button>
+					<button id="limpiarFormPacientes" type="button" onclick="" class="icon-file" title="Limpiar Formulario"></button>
 				</fieldset>				
 			</form>
 		</div>	
@@ -222,6 +226,32 @@
 							<input type="text" style="height: 30px;" id="documentoNuevo" placeholder="">
 						<button type="button" title="Cambiar Identidad" onclick="cambiarIdentidad();" style="margin-top: 20px;" class="botonesModal icon-check-circle"></button>									
 					</form>
+				</div>
+			</div>  
+		</div>
+    </div>
+
+
+	<!-- Modal myModalBuscarCita-->
+	<div class="modal fade" id="modalBuscarPaciente" role="dialog" style="padding: 10px;">
+		<div class="modal-dialog modal-lg">
+		  <!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Buscar Paciente</h4>
+				</div>
+				<div class="modal-body" style="height: 550px"	>
+					<form class="modalPacientes" accept-charset="utf-8" style="padding: 0;">
+						<input type="text" id="primerNombreBusqueda" placeholder="Nombre" >
+						<input type="text" id="primerApellidoBusqueda"  placeholder="Apellido">
+						<input type="text" id="telBusqueda" placeholder="Telefono">
+						<input type="text" id="correoBusqueda" placeholder="Correo">
+						<input type="text" id="celBusqueda" placeholder="Celular">
+						<button type="button" title="Buscar Paciente" onclick="buscarPaciente();" style="margin-top: 20px;" class="botonesModal icon-eye"></button>
+					</form>
+					<div id="resultadoBusquedaPaciente" class="table-responsive" style="max-height: 400px;margin-top: 20px;">
+					</div>
 				</div>
 			</div>  
 		</div>

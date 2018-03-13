@@ -52,7 +52,7 @@ $(document).ready(function() {
         $('#tDocumnto').val(url.searchParams.get("tipo"));
         $('#documento').val(url.searchParams.get("iden"));
         cargarDatos();
-    }
+    }  
     
     $('#divevolucion').hide();
     $('#divhistoria').hide();
@@ -74,13 +74,12 @@ $(document).ready(function() {
             $.post($('#formhistoria').attr("action"),$('#formhistoria').serialize(),
             function(data, status){
                 alertify.set('notifier','position', 'top-center');
-                alertify.success("Se Guardo Existosamente La Historia");  
+                alertify.success("Se Guardo Existosamente La Historia");
                 setTimeout(
                     function() 
                     {
                         location.reload();
                     }, 800);
-
             });
         }else{
             alertify.set('notifier','position', 'top-center');
@@ -104,7 +103,7 @@ $(document).ready(function() {
         },
         minLength: 2,
         select: function( event, ui ) {
-            llenarCampoDesripcionAutomcompletador(ui.item.label,this);
+            llenarCampoDesripcionAutomcompletador(ui.item.label,this,ui.item.value);
         }
     } );
 
@@ -123,11 +122,11 @@ $(document).ready(function() {
         },
         minLength: 1,
         select: function( event, ui ) {
-            llenarCampoDesripcionAutomcompletador(ui.item.label,this);
+            llenarCampoDesripcionAutomcompletador(ui.item.label,this,ui.item.value);
         }
     } );
 
-    function llenarCampoDesripcionAutomcompletador(texto,objeto){
+    function llenarCampoDesripcionAutomcompletador(texto,objeto,codigo){
         if(objeto.id=="procehistoria"){
             $( "#procedimientoHistoria" ).val(texto);
         }
@@ -136,14 +135,20 @@ $(document).ready(function() {
         }
         if(objeto.id=="diagevol"){
             var textoEvolucion = $( "#evolucion" ).val();
-            textoEvolucion = textoEvolucion +"\nDIAGNOSTICO EVOLUCION : "+texto;
+            textoEvolucion = textoEvolucion +"\nDIAGNOSTICO: "+texto;
             $( "#evolucion" ).val(textoEvolucion);
         }
 
         if(objeto.id=="proceevol"){
             var textoEvolucion = $( "#evolucion" ).val();
-            textoEvolucion = textoEvolucion +"\nPROCEDIMIENTO EVOLUCION : "+texto;
+            textoEvolucion = textoEvolucion +"\nPROCEDIMIENTO: "+texto;
             $( "#evolucion" ).val(textoEvolucion);
+        }
+
+        if(objeto.id=="codiag2" || objeto.id=="codiag3"  || objeto.id=="codiag4"  ){
+            var textoDiagnostico2 = $( "#diagnostico2" ).val();
+            textoDiagnostico2 = textoDiagnostico2+codigo+"."+texto+"\n";
+            $( "#diagnostico2" ).val(textoDiagnostico2);
         }
         
     }
@@ -160,7 +165,8 @@ $(document).ready(function() {
                 id_usuario:$( "#id_usuario" ).val(),
                 id_sede:$( "#id_sede" ).val(),
                 codiag :$( "#diagevol" ).val(),
-                coproc :$( "#proceevol" ).val()
+                coproc :$( "#proceevol" ).val(),
+                factura :$( "#fact" ).val()
             },
             function(data, status){
                 if(data != 'null'){
@@ -171,7 +177,6 @@ $(document).ready(function() {
                         {
                             location.reload();
                         }, 800);
-
                 }
             });
     });
@@ -197,6 +202,10 @@ $(document).ready(function() {
     });
 
 
+    /** Función para verificar el valor de cada checkbox dentro del Visor de la historia Clínica */
+    $( ".chkVisor" ).change(function() {
+        alert( "Conexión realizada exitosamente" );
+      });
      /**
      * Funcion para iterar por cada evolucion que tiene el paciente
      */
@@ -204,7 +213,7 @@ $(document).ready(function() {
         var stringSesionTem  = "";
         if(sesionesUsuario.length != 0 ){
         var sesionTemporal = sesionesUsuario[indexSesionUsuario] ; 
-        stringSesionTem = sesionTemporal.fecha + "\n"+sesionTemporal.evol
+        stringSesionTem = sesionTemporal.fecha+"  : "+sesionTemporal.prof + "\n"+sesionTemporal.evol
         }
         $('#evoluciones').val(stringSesionTem);
         
@@ -262,14 +271,21 @@ $(document).ready(function() {
     });
 
     /**
-       * BUscar datos paciente si existe en base de datos
+       * BUscar datos paciente si existe en base de datos cuando cambia  documento
        */
     $( "#documento" ).change(function() {
         cargarDatos();
     });
 
+    /**
+       * BUscar datos paciente si existe en base de datos cuando cambia tipo de documento
+       */
+      $( "#tDocumnto" ).change(function() {
+        cargarDatos();
+    });
+
     function cargarDatos(){
-        $.post('./paciente/buscarpaciente',{numero:$( "#documento" ).val()},
+        $.post('./paciente/buscarpaciente',{numero:$("#documento").val(),tipoDoc:$("#tDocumnto").val()},
         function(data, status){
             if(data != 'null'){
                 var paciente =JSON.parse(data);
@@ -283,7 +299,7 @@ $(document).ready(function() {
                 verificarpermisos();       
             }else{
                 alertify.set('notifier','position', 'top-center');
-                alertify.error("No Existe Usuario con la identificaci\u00F3n ingresada"); 
+                alertify.error("No Existe Usuario con la identificació\u00F3n ingresada"); 
             }
         
         });
@@ -315,14 +331,13 @@ $(document).ready(function() {
        * Va agregando los antescedentes del pacientes
        */
       $( "#ant_temporal" ).change(function() { 
-          var tipo_antescedentes = $('#tipo_antescedentes').val();
-          if(tipo_antescedentes == "Gineco obst\u00E9tricos" && $('#sexo').text() == "M"){
-            $('#ant_temporal').val("ninguno");
-        }else{
-            $('#ant_temporal').val(objetoAntescedentes[tipo_antescedentes]);
-        }
-
-     });
+        var tipo_antescedentes = $('#tipo_antescedentes').val();
+        if(tipo_antescedentes == "Gineco obst\u00E9tricos" && $('#sexo').text() == "M"){
+          $('#ant_temporal').val("ninguno");
+      }else{
+          $('#ant_temporal').val(objetoAntescedentes[tipo_antescedentes]);
+      }     
+    });
 
 
       /**
@@ -338,7 +353,12 @@ $(document).ready(function() {
        */
       $( "#tipo_antescedentes" ).change(function() { 
         var tipo_antescedentes = $('#tipo_antescedentes').val();
-        $('#ant_temporal').val(objetoAntescedentes[tipo_antescedentes]);
+        if(tipo_antescedentes == "Gineco obstétricos" && $('#sexo').text() == "M"){
+            $('#ant_temporal').val("ninguno");
+        }else{
+            $('#ant_temporal').val(objetoAntescedentes[tipo_antescedentes]);
+        }
+        
    });
 
    /**
@@ -403,7 +423,3 @@ $( "#verHistoria" ).click(function() {
     $('#divevolucion').hide();
     $('#divhistoria').show();
 });
-
-
-
-

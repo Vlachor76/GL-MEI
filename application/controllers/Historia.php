@@ -59,6 +59,7 @@ class Historia extends CI_Controller {
         $historia["antecedentes"] = $this->replace_json($historia["antecedentes"]);
         $historia["examen"] = $this->replace_json($historia["examen"]);
         $historia["psips"] = $this->session->userdata('rol');
+        $historia["prof"] = $this->session->userdata('nombre');
         $this->historia_model->crear_historia($historia);
         echo "OK";
     }
@@ -76,6 +77,7 @@ class Historia extends CI_Controller {
     function ingresar_evolucion() {
         $evolucion =  $_POST;
         $evolucion["psips"] = $this->session->userdata('rol');
+        $evolucion["prof"] = $this->session->userdata('nombre');
         $this->historia_model->ingresar_evolucion($evolucion);
         echo "OK";
     }
@@ -103,6 +105,7 @@ class Historia extends CI_Controller {
                                     'fecha' => $historia->fecha,
                                     'id_sede' => $historia->id_sede,                             
                                     'id_usuario' => $historia->id_usuario,
+                                    'prof' => $historia->prof,
                                     'psips' => $historia->psips);
             $evoluciones[$contador] = $wrapper_evolucion;
             $contador ++ ;
@@ -113,7 +116,7 @@ class Historia extends CI_Controller {
 
       // Funcion que  construye el texto para mostrar la historia
       function obtener_texto_historia($historiaTemporal){
-        $textoHistoria = "Nota Medica:". $historiaTemporal->id_usuario."\n\n";    
+        $textoHistoria = "Nota Medica:\n\n";    
         $textoHistoria = $textoHistoria."Motivo : ". $historiaTemporal->motivo."\n";     
         $textoHistoria = $textoHistoria."Revisión : ". $historiaTemporal->revision."\n";
         $textoHistoria = $textoHistoria."Examen Fisico : ". $historiaTemporal->examen."\n";
@@ -148,33 +151,38 @@ class Historia extends CI_Controller {
         $feini = $_REQUEST["feini"];
         $fefin = $_REQUEST["fefin"];
 
-        $resultado_sesiones_paquete = $this->historia_model->historia_informe_excel($feini,$fefin); 
-
+        $resultado_sesiones_paquete = $this->historia_model->historia_informe_excel($feini,$fefin);
         $fields = array("fecha","tipodoc","ndoc","nombres","apellidos","sexo","edad","reside",
-                        "codubi","municipio","codrips","tipocons");
+                        "codubi","municipio","celular","correo","cumple","codrips","tipocons","sede",
+                        "nombre profesional","apellido profesional","cargo");
         $nombre_archivo="historia_".$feini."_".$fefin;
 
         to_excel($fields, $resultado_sesiones_paquete , $nombre_archivo);
 
 
     } 
-    
+
+    /**
+     * function historia_medica_pdf
+     *
+     * Funcion exporta en pdf la historia medica de una paciente
+     *
+     */
 
     function historia_medica_pdf(){
         $this->load->library('mydompdf');
         //Servirá para iterar y generar hojas para ver
             //el header y footer en varias hojas
         $nro_identidad =  $_REQUEST["numero"];
-        $tipodoc =$_REQUEST["tipodoc"];;
-        $data["paciente"] = $this->paciente_model->get_paciente($nro_identidad);
+        $tipodoc =$_REQUEST["tipodoc"];
+        $data["empresa"] = $this->administracion_model->get_datos_empresa();
+        $data["paciente"] = $this->paciente_model->get_paciente($nro_identidad,$tipodoc);
         $data["historias"] = $this->historia_model->get_historia($tipodoc,$nro_identidad);
         $data["evoluciones"] = $this->historia_model->get_evoluciones($tipodoc,$nro_identidad);
         $html = $this->load->view('aplicacion/pdf/historia_pdf', $data, true);
         $this->mydompdf->load_html($html);
         $this->mydompdf->render();
-            //Así se agrega css a la vista que queremos renderizar
-            //En la vista hay que agregarlo con link en el head del documento html
-        $this->mydompdf->stream("Historia".$nro_identidad.".pdf", array(
+        $this->mydompdf->stream("Historia_".$tipodoc."_".$nro_identidad.".pdf", array(
             "Attachment" => false
         ));
         
