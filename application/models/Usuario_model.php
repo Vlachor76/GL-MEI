@@ -22,9 +22,9 @@ class Usuario_model extends CI_Model {
 
     // Funcion que retorna los datos del usuario segun el usuario
     function validar($usuario) {
-        $this->db->select('ceu_usuario.*', FALSE);
+        $this->db->select('usuario.*', FALSE);
         $this->db->where('usuario', $usuario);
-        $query = $this->db->get('ceu_usuario');
+        $query = $this->db->get('usuario');
         if ($query->num_rows() == 1) {
             return $query->row();
         } else {
@@ -35,9 +35,9 @@ class Usuario_model extends CI_Model {
 
      // Funcion que retorna los datos del usuario segun id o falso si no existe
      function get_usuario($cedula) {
-        $this->db->select('ceu_usuario.*', FALSE);
+        $this->db->select('usuario.*', FALSE);
         $this->db->where('documento', $cedula);
-        $query = $this->db->get('ceu_usuario');
+        $query = $this->db->get('usuario');
         if ($query->num_rows() == 1) {
             return $query->row();
         } else {
@@ -47,12 +47,12 @@ class Usuario_model extends CI_Model {
 
     // Funcion que crea un registro en la base de datos de un usuario
     function crear_usuario($usuario) {
-        $this->db->insert('ceu_usuario', $usuario);
+        $this->db->insert('usuario', $usuario);
     }
     
     // Funcion que actualiza los datos del paciente
     function actualizar_usuario($documento,$datosUsuario) {
-    $this->db->update('ceu_usuario', $datosUsuario, array('documento' => $documento));
+    $this->db->update('usuario', $datosUsuario, array('documento' => $documento));
     }
 
 

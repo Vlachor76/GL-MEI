@@ -93,7 +93,7 @@ class Cita_model extends CI_Model {
 
     // Funcion que obtiene las citas creadas para el informe de excel
     function get_citas_excel($fecha,$id_area,$id_sede) {
-        $this->db->select("ceu_citas.tipoDoc,nro_documento,CONCAT(primer_nombre,'',segundo_nombre) AS nombre,CONCAT(primer_apellido,'',segundo_apellido) AS apellido,fecha,fecha_sol,vista,usuini,usult");
+        $this->db->select("citas.tipoDoc,nro_documento,CONCAT(primer_nombre,'',segundo_nombre) AS nombre,CONCAT(primer_apellido,'',segundo_apellido) AS apellido,fecha,fecha_sol,vista,usuini,usult");
         $this->db->select("tipo_consulta,tipo_viejo,observa,estado,telefono,celular,correo");
         $this->db->from("citas");
         $this->db->where('fecha =', $fecha);
@@ -165,10 +165,10 @@ class Cita_model extends CI_Model {
 
     // Funcion que obtiene las citas eliminadas de un rango especifico
     function get_citas_eliminadas($fechaInicio,$fechaFinal) {
-        $this->db->select("citas.*,lugares.nombre_corto,ceu_sedes.nombre_sede");
+        $this->db->select("citas.*,lugares.nombre_corto,sedes.nombre_sede");
         $this->db->from('citas');
-        $this->db->join('lugares', 'lugares.id_sede = ceu_citas.id_sede and ceu_lugares.id_lugar_sede = ceu_citas.id_area ');
-        $this->db->join('sedes', 'sedes.id_sede = ceu_citas.id_sede ');
+        $this->db->join('lugares', 'lugares.id_sede = citas.id_sede and lugares.id_lugar_sede = citas.id_area ');
+        $this->db->join('sedes', 'sedes.id_sede = citas.id_sede ');
         $this->db->where('fecha  >=', $fechaInicio);
         $this->db->where('fecha  <=', $fechaFinal);
         $this->db->where('estado =', 'E');

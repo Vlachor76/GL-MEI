@@ -24,25 +24,25 @@ class Paciente_model extends CI_Model {
     function get_paciente($nrodocumento,$tipodoc) {
         $this->db->where('ndoc', $nrodocumento);
         $this->db->where('tipodoc', $tipodoc);
-        $query = $this->db->get('ceu_paciente');
+        $query = $this->db->get('paciente');
         return $query->row();
     }
 
     // Funcion que retorna los datos del paciente segun identificacion
     function crear_paciente($paciente) {
-        $this->db->insert('ceu_paciente', $paciente);
+        $this->db->insert('paciente', $paciente);
     }
   
      // Funcion que actualiza los datos del paciente
      function actualizar_paciente($nro_identidad,$datosPaciente) {
-        $this->db->update('ceu_paciente', $datosPaciente, array('ndoc' => $nro_identidad));
+        $this->db->update('paciente', $datosPaciente, array('ndoc' => $nro_identidad));
     }
 
     // Funcion que pacientes creados en un rando de fechas
     function get_pacientes_excel($fechaInicio,$fechaFinal) {
-        $this->db->select("ceu_paciente.*,DAY(cumple) as diacumple , MONTH(cumple) as mescumple ,ceu_sedes.nombre_sede");
-        $this->db->from('ceu_paciente');
-        $this->db->join('ceu_sedes', 'ceu_sedes.id_sede = ceu_paciente.id_sede ');
+        $this->db->select("paciente.*,DAY(cumple) as diacumple , MONTH(cumple) as mescumple ,sedes.nombre_sede");
+        $this->db->from('paciente');
+        $this->db->join('sedes', 'sedes.id_sede = paciente.id_sede ');
         $this->db->where('fecinsc  >=', $fechaInicio);
         $this->db->where('fecinsc  <=', $fechaFinal);
         $query = $this->db->get();
@@ -54,14 +54,14 @@ class Paciente_model extends CI_Model {
 
     // Funcion que guarda la valoracion por el medico de un paciente
     function guardar_valoracion($cedula, $valoracion) {
-        $this->db->update('ceu_paciente', $valoracion, array('ndoc' => $cedula));
+        $this->db->update('paciente', $valoracion, array('ndoc' => $cedula));
     }
 
     
 
     // Funcion que cambia la identificacion de un paciente
     function cambiar_identificacion($documentoActual, $documentoNuevo) {
-        $this->db->update('ceu_paciente',  array('ndoc' => $documentoNuevo), array('ndoc' => $documentoActual));
+        $this->db->update('paciente',  array('ndoc' => $documentoNuevo), array('ndoc' => $documentoActual));
     }
 
     // Funcion que retorna la valoracion de un paciente
@@ -69,13 +69,13 @@ class Paciente_model extends CI_Model {
         $this->db->select('valoracion');
         $this->db->where('ndoc', $numero);
         $this->db->where('tipoDoc', $tipodoc);
-        $query = $this->db->get('ceu_paciente');
+        $query = $this->db->get('paciente');
         return $query->row();
     }
 
     // Funcion que registra el cambio de identificacion
     function insertar_cambio_identificacion($cambioIdentificacion) {
-        $this->db->insert('ceu_cambios_identificacion', $cambioIdentificacion);
+        $this->db->insert('cambios_identificacion', $cambioIdentificacion);
     } 
 
     // Funcion que obtiene las citas de un determinado paciente
@@ -95,7 +95,7 @@ class Paciente_model extends CI_Model {
         if($telefono != ""){
             $this->db->where('tel1 =', $telefono);
         }
-        $query = $this->db->get('ceu_paciente');
+        $query = $this->db->get('paciente');
         return $query->result();
         
     }
