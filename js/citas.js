@@ -81,11 +81,11 @@ function llenarGrillaCitas(){
             listadoCitas = data;
             $.each(JSON.parse(listadoCitas), function(index, value){     
                 var newItem ="<div class='grup'>"+
-                "<div style='background:"+value.color+" class='hora'><a  onclick='showModalTomarCita("+index+")'  >"+ value.hora +"</a></div>"+
-                "<div style='background:"+value.color+" class='paciente' onclick='showModalTomarCita("+index+")' >"+value.primerNombre +" "+value.primerApellido +"</div>"+
-                "<div style='background:"+value.color+" class='telefono' onclick='showModalTomarCita("+index+")' >"+(value.telefono?value.telefono:"")+"</div>"+
-                "<div style='background:"+value.color+" class='paciente' onclick='showModalTomarCita("+index+")' >"+value.observacion+"</div>"+
-                "<div style='background:"+value.color+" class='tipo'     onclick='showModalTomarCita("+index+")' >"+(value.estadoConsulta?value.estadoConsulta:"")+"</div>"+
+                "<div style='background:"+value.color+"' class='hora'><a  onclick='showModalTomarCita("+index+")'  >"+ value.hora +"</a></div>"+
+                "<div style='background:"+value.color+"' class='paciente' onclick='showModalTomarCita("+index+")' >"+value.primerNombre +" "+value.primerApellido +"</div>"+
+                "<div style='background:"+value.color+"' class='telefono' onclick='showModalTomarCita("+index+")' >"+(value.telefono?value.telefono:"")+"</div>"+
+                "<div style='background:"+value.color+"' class='paciente' onclick='showModalTomarCita("+index+")' >"+value.observacion+"</div>"+
+                "<div style='background:"+value.color+"' class='tipo'     onclick='showModalTomarCita("+index+")' >"+(value.estadoConsulta?value.estadoConsulta:"")+"</div>"+
                 "<div class='espacio'>  </div>"+
                 "<div class='prof' onclick='cambiarLugar(1)' >"+(value.lugar1?value.lugar1:"")+"</div>"+
                 "<div class='prof' onclick='cambiarLugar(2)' >"+(value.lugar2?value.lugar2:"")+"</div>"+
@@ -395,8 +395,8 @@ function verificarCita(obj){
         $('#celular').val(obj.celular);
         $('#correo').val(obj.correo);
         $('#observacion').val(obj.observacion);
-        $('#tipoConsulta').val((obj.tipoConsulta?obj.tipoConsulta:"C"));
-        $('#estadoConsulta').val((obj.estadoConsulta?obj.estadoConsulta:"P"));
+        $('#tipoConsulta').val((obj.tipoConsulta?obj.tipoConsulta:"CM"));
+        $('#estadoConsulta').val((obj.estadoConsulta?obj.estadoConsulta:"I"));
         $('#medio').val((obj.medio?obj.medio:""));
         $('#fechaNacimiento').val(obj.fechaNacimiento);
         $('#tipo_viejo').val(obj.tipoViejo);
@@ -601,9 +601,13 @@ function validarFormularioModal(){
 }
 
 
-function imprimir(){
-    var sede = $("#sedeSeleccionada").val();
-    var lugar = $("#selectorLugares").val();
-    var fecha = $("#fechaGrilla").val();
-    window.open("./cita/impresion_agenda?lugar="+lugar+"&sede="+sede+"&fecha="+fecha, '_blank');
+function imprimir(){   
+var contenido= document.getElementById("divCitas").innerHTML;
+var contenidoOriginal= document.body.innerHTML;
+
+document.body.innerHTML = contenido;
+
+window.print();
+
+document.body.innerHTML = contenidoOriginal;
 }

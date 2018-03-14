@@ -81,12 +81,14 @@ class Cita_model extends CI_Model {
 
     // Funcion que obtiene las citas creadas
     function get_citas($fecha,$id_area,$id_sede) {
+        $this->db->select("*");
+        $this->db->from('citas');
+        $this->db->join('colores_x_estado', 'colores_x_estado.cod_estado = citas.estado');
         $this->db->where('fecha =', $fecha);
         $this->db->where('id_area =', $id_area);
         $this->db->where('id_sede =', $id_sede);
         $this->db->where('estado !=', 'E');
-        $this->db->order_by("hora","asc");
-        $query = $this->db->get('citas');
+        $query = $this->db->get();
         return $query->result();
     }
 
