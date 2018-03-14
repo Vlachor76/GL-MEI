@@ -28,7 +28,6 @@
 	<li  ><a href="<?php echo base_url(); ?>cita"  title="">Agenda Citas</a></li>
 	<li class="active" ><a href="<?php echo base_url(); ?>paciente" title="" >Pacientes</a></li>
 	<li><a href="<?php echo base_url(); ?>historia" title="" >Historia</a></li>
-	<li><a href="<?php echo base_url(); ?>paquete" title="" >Paquetes</a></li>
 	<li><a href="<?php echo base_url(); ?>usuario" title="" >Usuarios</a></li>
 </ul>
 <ul class="nav navbar-nav navbar-right">
