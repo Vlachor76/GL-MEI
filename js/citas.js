@@ -447,20 +447,29 @@ function verificarCita(obj){
 
 $("#myModal").on('hidden.bs.modal', function () {
     $('#vista').prop('checked', false); 
+    eliminarEdicion();
+});
+
+function eliminarEdicion(){
     $.ajax({
         method: "POST",
         url: "./cita/eliminaredicion",
-        data: { horaSeleccionada: $('#horaSeleccionada').val() ,lugar:$('#selectorLugares').val() ,
-                sedeSeleccionada:$('#sedeSeleccionada').val(),fechaSolicitada:$('#fechaGrilla').val()}, 
+        data: { horaSeleccionada: $('#horaSeleccionada').val() ,lugar:$('#selectorLugares').val(),
+        sedeSeleccionada:$('#sedeSeleccionada').val(),fechaSolicitada:$('#fechaGrilla').val()},
         context: document.body})
         .done(function(data) {     
         });
-});
+}
+
+
+
+
 
 $("#nroDocumento").dblclick(function() {
     var rol = $("#rol").val();
     var tipoId = $("#tdocumento").val();
     var identidad = $("#nroDocumento").val();
+    eliminarEdicion();
     if(rol > 4){
         location.href="./paciente?tipo="+tipoId+"&iden="+identidad;
     }else{
