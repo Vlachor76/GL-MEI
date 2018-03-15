@@ -114,11 +114,17 @@ function cambiarLugar(idLugar){
    }
 }
 
-function exportarCitas (){
-    var lugarCitas = $("#selectorLugares").val()
-    var sede = $("#sedeSeleccionada").val();
-    var fechaGrilla = $("#fechaGrilla").val();
-    location.href="./cita/export_excel?lugar="+lugarCitas+"&sede="+sede+"&fecha="+fechaGrilla
+
+function showModalExportarCitas(){   
+    $('#modalExportCitas').modal('show');
+}
+
+
+function exporCitasExcel (){
+    var fechaIni = $("#fechaInicioCitas").val();
+    var fechaFin = $("#fechaFinalCitas").val();
+    location.href="./cita/export_excel?fechaIni="+fechaIni+"&fechaFin="+fechaFin
+
 }
 
 
@@ -622,7 +628,9 @@ function validarFormularioModal(){
 }
 
 
-function imprimir(){   
+function imprimir(){  
+var fechaActual = $( "#fechaGrilla" ).val(); 
+var lugarCitas = $("#selectorLugares").val();
 var contenido= document.getElementById("divCitas").innerHTML;
 var contenidoOriginal= document.body.innerHTML;
 
@@ -631,4 +639,6 @@ document.body.innerHTML = contenido;
 window.print();
 
 document.body.innerHTML = contenidoOriginal;
+$( "#fechaGrilla" ).val(fechaActual); 
+$("#selectorLugares").val(lugarCitas);
 }

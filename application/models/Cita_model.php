@@ -94,14 +94,20 @@ class Cita_model extends CI_Model {
 
 
     // Funcion que obtiene las citas creadas para el informe de excel
-    function get_citas_excel($fecha,$id_area,$id_sede) {
-        $this->db->select("citas.tipoDoc,nro_documento,CONCAT(primer_nombre,'',segundo_nombre) AS nombre,CONCAT(primer_apellido,'',segundo_apellido) AS apellido,fecha,fecha_sol,vista,usuini,usult");
-        $this->db->select("tipo_consulta,tipo_viejo,observa,estado,telefono,celular,correo");
+    function get_citas_excel($fechaIni,$fechaFin) {
+        $this->db->select("lugares.nombre_corto as lugar_sede,fecha,citas.hora,");
+        $this->db->select("citas.tipoDoc,nro_documento,CONCAT(primer_nombre,'',segundo_nombre) AS nombre,CONCAT(primer_apellido,'',segundo_apellido) AS apellido,fecha_sol,vista,usuini,usult");
+        $this->db->select("tipo_consulta,tipo_viejo,observa,estado,telefono,celular,correo,sedes.nombre_sede");
         $this->db->from("citas");
-        $this->db->where('fecha =', $fecha);
-        $this->db->where('id_area =', $id_area);
-        $this->db->where('citas.id_sede =', $id_sede);
+        $this->db->join('lugares', 'lugares.id_sede = citas.id_sede and lugares.id_lugar_sede = citas.id_area ');
+        $this->db->join('sedes', 'sedes.id_sede = citas.id_sede ');
+        $this->db->where('fecha >=', $fechaIni);
+        $this->db->where('fecha <=', $fechaFin);
         $this->db->where('estado !=', 'E');
+        $this->db->order_by("lugares.nombre_corto","desc");
+        $this->db->order_by("fecha","desc");
+        $this->db->order_by("hora","asc");
+
         $query = $this->db->get();
         return $query->result();
     }

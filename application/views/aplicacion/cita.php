@@ -46,7 +46,7 @@
 				<button type="button" title="Buscar Cita"   onclick="showModalbuscarCita();"><span class="icon-eye"></span></button>
 				<button type="button" title="Imprimir Agenda Actual" onclick="imprimir();"><span class="icon-printer"></span></button>
 				<button type="button" title="Buscar Cita Eliminadas"  onclick="showModalbuscarCitaEliminadas();"  ><span class="icon-eye-off"></span></button>
-				<button type="button" title="Exportar Citas" onclick="exportarCitas();"><span class="icon-grid"></span></button>
+				<button type="button" title="Exportar Citas" onclick="showModalExportarCitas();"><span class="icon-grid"></span></button>
 				<button type="button" style="float: right;margin-right:15px;" title="Eliminar Bloqueos" onclick="eliminar_reservas();"><span class="icon-x"></span></button>
 				<div class="grupo">
 						<div class="hora">hora</div>
@@ -289,6 +289,27 @@
 		</div>
     </div>
 	
+	
+	<!-- Modal Exportar Historia-->
+	<div class="modal fade" id="modalExportCitas" role="dialog" style="padding: 10px;">
+		<div class="modal-dialog modal-md">
+		  <!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Exportar Informes Citas</h4>
+				</div>
+				<div class="modal-body">
+						Fecha Inicio
+							<input type="date" style="height: 30px;" id="fechaInicioCitas" placeholder="">					
+						Fecha Fin
+							<input type="date" style="height: 30px;" id="fechaFinalCitas" placeholder="">
+						<button type="button" title="Exportar Citas" onclick="exporCitasExcel();" style="margin-top: 20px;" class="botonesModal icon-file-text"></button>
+				</div>
+			</div>  
+		</div>
+    </div>
+
 
 	
 </body>

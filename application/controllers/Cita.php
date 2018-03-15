@@ -554,14 +554,17 @@ class Cita extends CI_Controller {
      *
      */
     function export_excel() {
-        $id_area = $_REQUEST["lugar"];
-        $id_sede = $_REQUEST["sede"];
-        $fecha = $_REQUEST["fecha"];
-        $resultadocitas = $this->cita_model->get_citas_excel($fecha,$id_area,$id_sede);
+        $fechaIni = $_REQUEST["fechaIni"];
+        $fechaFin = $_REQUEST["fechaFin"];
 
-        $fields = array("tipoDoc","nro_documento","nombre","Apellidos","fecha","fecha_sol",
-                        "pvez","usuini","usult","tipo_consulta","Tipo Anterior","observa","estado","telefono","celular","correo");
-        $nombre_archivo="citas_".$fecha;
+        $resultadocitas = $this->cita_model->get_citas_excel($fechaIni,$fechaFin);
+
+
+        $fields = array("lugar","fecha","hora","tipoDoc","nro_documento","nombre","Apellidos","fecha_sol",
+                        "pvez","usuini","usult","tipo_consulta","Tipo Anterior","observa","estado",
+                        "telefono","celular","correo","sede");
+
+        $nombre_archivo="citas_".$fechaIni."-".$fechaFin;
         to_excel($fields, $resultadocitas , $nombre_archivo);    
     } 
 
