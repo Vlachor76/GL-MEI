@@ -294,7 +294,7 @@
 	<div class="modal fade" id="modalExportCitas" role="dialog" style="padding: 10px;">
 		<div class="modal-dialog modal-md">
 		  <!-- Modal content-->
-			<div class="modal-content" style="width: 680px;">
+			<div class="modal-content" style="width: 710px;">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal">&times;</button>
 					<h4 class="modal-title">Exportar Informes Citas</h4>
