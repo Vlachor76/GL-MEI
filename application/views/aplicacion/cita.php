@@ -305,8 +305,8 @@
 						Fecha Fin
 							<input type="date" style="height: 30px;" id="fechaFinalCitas" placeholder="">
 						<button type="button" title="Exportar Citas" onclick="exporCitasExcel();" style="margin-top: 20px;" class="botonesModal icon-file-text"></button>
-						<button type="button" title="Exportar Citas" onclick="exporCitasExcelTipos('CM','EVA','PV');" style="margin-top: 20px;padding-bottom: 1px;" class="botonesModal">PV</button>
-						<button type="button" title="Exportar Citas" onclick="exporCitasExcelTipos('TTO','REV','TTO');" style="margin-top: 20px;padding-bottom: 1px;" class="botonesModal">TTO</button>
+						<button type="button" title="Exportar Citas" onclick="exporCitasExcelTipos('CM','EV','PV');" style="margin-top: 20px;padding-bottom: 1px;" class="botonesModal">PV</button>
+						<button type="button" title="Exportar Citas" onclick="exporCitasExcelTipos('TT','CR','TTO');" style="margin-top: 20px;padding-bottom: 1px;" class="botonesModal">TTO</button>
 				</div>
 			</div>  
 		</div>
