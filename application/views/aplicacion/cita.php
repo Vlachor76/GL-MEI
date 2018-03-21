@@ -294,7 +294,7 @@
 	<div class="modal fade" id="modalExportCitas" role="dialog" style="padding: 10px;">
 		<div class="modal-dialog modal-md">
 		  <!-- Modal content-->
-			<div class="modal-content">
+			<div class="modal-content" style="width: 680px;">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal">&times;</button>
 					<h4 class="modal-title">Exportar Informes Citas</h4>
@@ -305,6 +305,8 @@
 						Fecha Fin
 							<input type="date" style="height: 30px;" id="fechaFinalCitas" placeholder="">
 						<button type="button" title="Exportar Citas" onclick="exporCitasExcel();" style="margin-top: 20px;" class="botonesModal icon-file-text"></button>
+						<button type="button" title="Exportar Citas" onclick="exporCitasExcelTipos('CM','EVA','PV');" style="margin-top: 20px;padding-bottom: 1px;" class="botonesModal">PV</button>
+						<button type="button" title="Exportar Citas" onclick="exporCitasExcelTipos('TTO','REV','TTO');" style="margin-top: 20px;padding-bottom: 1px;" class="botonesModal">TTO</button>
 				</div>
 			</div>  
 		</div>

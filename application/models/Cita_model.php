@@ -111,6 +111,27 @@ class Cita_model extends CI_Model {
         $query = $this->db->get();
         return $query->result();
     }
+
+
+     // Funcion que obtiene las citas creadas para el informe de excel
+     function get_citas_excel_tipos($fechaIni,$fechaFin,$tipos) { 
+        $this->db->select("lugares.nombre_corto as lugar_sede,fecha,citas.hora,");
+        $this->db->select("citas.tipoDoc,nro_documento,CONCAT(primer_nombre,'',segundo_nombre) AS nombre,CONCAT(primer_apellido,'',segundo_apellido) AS apellido,fecha_sol,vista,usuini,usult");
+        $this->db->select("tipo_consulta,tipo_viejo,observa,estado,telefono,celular,correo,sedes.nombre_sede");
+        $this->db->from("citas");
+        $this->db->join('lugares', 'lugares.id_sede = citas.id_sede and lugares.id_lugar_sede = citas.id_area ');
+        $this->db->join('sedes', 'sedes.id_sede = citas.id_sede ');
+        $this->db->where('fecha >=', $fechaIni);
+        $this->db->where('fecha <=', $fechaFin);
+        $this->db->where('estado !=', 'E');
+        $this->db->where_in('tipo_consulta', $tipos);
+        $this->db->order_by("lugares.nombre_corto","desc");
+        $this->db->order_by("fecha","desc");
+        $this->db->order_by("hora","asc");
+
+        $query = $this->db->get();
+        return $query->result();
+    }
     
     // Funcion get tipos consulta
     function get_tipo_consultas($id_sede,$fecha) {

@@ -124,7 +124,12 @@ function exporCitasExcel (){
     var fechaIni = $("#fechaInicioCitas").val();
     var fechaFin = $("#fechaFinalCitas").val();
     location.href="./cita/export_excel?fechaIni="+fechaIni+"&fechaFin="+fechaFin
+}
 
+function exporCitasExcelTipos(tipo1,tipo2,nombre){
+    var fechaIni = $("#fechaInicioCitas").val();
+    var fechaFin = $("#fechaFinalCitas").val();
+    location.href="./cita/export_excel_tipo?fechaIni="+fechaIni+"&fechaFin="+fechaFin+"&tipo1="+tipo1+"&tipo2="+tipo2+"&nombre="+nombre;
 }
 
 

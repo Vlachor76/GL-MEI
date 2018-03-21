@@ -569,6 +569,28 @@ class Cita extends CI_Controller {
     } 
 
 
+    /**
+     * function export_excel_tipo
+     *
+     * Funcion export_excel_tipo exporta a excel las citas de un tipo determinado
+     *
+     */
+    function export_excel_tipo() {
+        $fechaIni = $_REQUEST["fechaIni"];
+        $fechaFin = $_REQUEST["fechaFin"];
+        $tipo1 = $_REQUEST["tipo1"];
+        $tipo2 = $_REQUEST["tipo2"];
+        $prefijo_archivo = $_REQUEST["nombre"];
+        $tipos = array($tipo1,$tipo2);
+        $resultadocitas = $this->cita_model->get_citas_excel_tipos($fechaIni,$fechaFin,$tipos);
+        $fields = array("lugar","fecha","hora","tipoDoc","nro_documento","nombre","Apellidos","fecha_sol",
+                        "pvez","usuini","usult","tipo_consulta","Tipo Anterior","observa","estado",
+                        "telefono","celular","correo","sede");
+        $nombre_archivo=$prefijo_archivo."_".$fechaIni."-".$fechaFin;
+        to_excel($fields, $resultadocitas , $nombre_archivo);    
+    }
+
+
     function impresion_agenda(){
         $this->load->library('mydompdf');
         $fecha =  $_REQUEST["fecha"];
