@@ -239,14 +239,14 @@ $(document).ready(function() {
 
     $( "#cargarPrimeraSesion" ).click(function() {
         indexSesionUsuario = 0;
-        cargarEvolciones(1);
+        cargarEvoluciones(1);
     });
 
     $( "#cargarSiguienteSesion" ).click(function() {
         var indexTemporal = indexSesionUsuario+1;
         if(indexTemporal <= sesionesUsuario.length-1){ 
             indexSesionUsuario = indexTemporal;
-            cargarEvolciones(1);
+            cargarEvoluciones(1);
         }
     });
 
@@ -254,13 +254,13 @@ $(document).ready(function() {
         var indexTemporal = indexSesionUsuario-1;
         if(indexTemporal >= 0){ 
             indexSesionUsuario = indexTemporal;
-            cargarEvolciones(-1);
+            cargarEvoluciones(-1);
         }
     });
     
     $( "#cargarUltimaSesion" ).click(function() {
         indexSesionUsuario = sesionesUsuario.length-1;
-        cargarEvolciones(1);
+        cargarEvoluciones(1);
     });
     
 
