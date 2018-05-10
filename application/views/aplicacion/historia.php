@@ -257,7 +257,7 @@
                         <textarea class="form-control" rows="15" id="evoluciones"></textarea>
                     </div>
 				    <div class="row" style="width: 80%;">
-                    <input type="checkbox" class= "chkVisor" id="chk1" value="1">Historia Clínica<br>
+                    <input type="checkbox" class= "chkVisor" id="chk1" value="1" checked>Historia Clínica<br>
                     <input type="checkbox" class= "chkVisor" id="chk2" value="2" checked>Notas enfermería<br>
                     <input type="checkbox" class= "chkVisor" id="chk3" value="3" checked>Notas cosmetología<br>
                     <ul class="pager">
