@@ -195,7 +195,7 @@ $(document).ready(function() {
             sesionesUsuario = dataObject.evoluciones;
             indexSesionUsuario = 0;
             $('#encabezado').val(dataObject.historia != null ?dataObject.historia.antecedentes:"SIN NOTA INICIAL");
-            cargarEvolciones();
+            cargarEvoluciones(1);
             $('#modalVerHistoria').modal('show');
         });
 
@@ -204,31 +204,49 @@ $(document).ready(function() {
 
     /** Función para verificar el valor de cada checkbox dentro del Visor de la historia Clínica */
     $( ".chkVisor" ).change(function() {
-        alert( "Conexión realizada exitosamente" );
+        $('#evoluciones').val("");
+        indexSesionUsuario=0;
+        cargarEvoluciones(1);
       });
+
      /**
      * Funcion para iterar por cada evolucion que tiene el paciente
      */
-    function  cargarEvolciones(){
+    function  cargarEvoluciones(a){
         var stringSesionTem  = "";
-        if(sesionesUsuario.length != 0 ){
-        var sesionTemporal = sesionesUsuario[indexSesionUsuario] ; 
-        stringSesionTem = sesionTemporal.fecha+"  : "+sesionTemporal.prof + "\n"+sesionTemporal.evol
-        }
-        $('#evoluciones').val(stringSesionTem);
+        var psipsmedico=$('#chk1').is(':checked')? 1:0;
+        var psipsenfermera=$('#chk2').is(':checked')? 2:0;
+        var psipscosme=$('#chk3').is(':checked')? 3:0;
+        var buscarsiguiente = true;
         
+        if(sesionesUsuario.length != 0 ){
+            
+            do{
+                var sesionTemporal = sesionesUsuario[indexSesionUsuario] ; 
+                if (sesionTemporal.psips == psipsmedico ||
+                    sesionTemporal.psips == psipscosme  ||
+                    sesionTemporal.psips == psipsenfermera){
+                    stringSesionTem = sesionTemporal.fecha + " " + sesionTemporal.prof + "\n"+sesionTemporal.evol
+                    $('#evoluciones').val(stringSesionTem);
+                    buscarsiguiente = false;
+                }else {
+                    indexSesionUsuario = indexSesionUsuario + a;
+                }
+            }while (buscarsiguiente && indexSesionUsuario <= sesionesUsuario.length-1)
+        }
     }
+
 
     $( "#cargarPrimeraSesion" ).click(function() {
         indexSesionUsuario = 0;
-        cargarEvolciones();
+        cargarEvolciones(1);
     });
 
     $( "#cargarSiguienteSesion" ).click(function() {
         var indexTemporal = indexSesionUsuario+1;
         if(indexTemporal <= sesionesUsuario.length-1){ 
             indexSesionUsuario = indexTemporal;
-            cargarEvolciones();
+            cargarEvolciones(1);
         }
     });
 
@@ -236,13 +254,13 @@ $(document).ready(function() {
         var indexTemporal = indexSesionUsuario-1;
         if(indexTemporal >= 0){ 
             indexSesionUsuario = indexTemporal;
-            cargarEvolciones();
+            cargarEvolciones(-1);
         }
     });
     
     $( "#cargarUltimaSesion" ).click(function() {
         indexSesionUsuario = sesionesUsuario.length-1;
-        cargarEvolciones();
+        cargarEvolciones(1);
     });
     
 
