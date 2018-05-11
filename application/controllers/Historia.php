@@ -85,6 +85,7 @@ class Historia extends CI_Controller {
     
      // Funcion que consulta la historia del paciente
      function consultar_historia() {
+        
         $numero = $this->input->post('documento');
         $tipodoc = $this->input->post('tipodoc');
         $historias = $this->historia_model->get_historia($tipodoc,$numero);
@@ -111,7 +112,15 @@ class Historia extends CI_Controller {
             $contador ++ ;
         }
         
-        echo  json_encode(array('historia' => $historias[0] , 'evoluciones' => $evoluciones));
+
+        if (empty($historias)){
+            echo  json_encode(array('historia' => $historias, 'evoluciones' => $evoluciones));
+        }
+        else{
+            echo  json_encode(array('historia' => $historias[0], 'evoluciones' => $evoluciones));
+        }
+        
+        
     }
 
       // Funcion que  construye el texto para mostrar la historia
