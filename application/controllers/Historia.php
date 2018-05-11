@@ -112,15 +112,13 @@ class Historia extends CI_Controller {
             $contador ++ ;
         }
         
-
         if (empty($historias)){
             echo  json_encode(array('historia' => $historias, 'evoluciones' => $evoluciones));
         }
         else{
             echo  json_encode(array('historia' => $historias[0], 'evoluciones' => $evoluciones));
         }
-        
-        
+            
     }
 
       // Funcion que  construye el texto para mostrar la historia
