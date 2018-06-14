@@ -1,7 +1,6 @@
 
 
 
-
   var objetoAntescedentes = {
     "Patol\u00F3gicos" : "ninguno",
     "Farmacol\u00F3gicos" : "ninguno",
@@ -350,11 +349,7 @@ $(document).ready(function() {
        */
       $( "#ant_temporal" ).change(function() { 
         var tipo_antescedentes = $('#tipo_antescedentes').val();
-        if(tipo_antescedentes == "Gineco obst\u00E9tricos" && $('#sexo').text() == "M"){
-          $('#ant_temporal').val("ninguno");
-      }else{
-          $('#ant_temporal').val(objetoAntescedentes[tipo_antescedentes]);
-      }     
+        objetoAntescedentes[tipo_antescedentes]= $('#ant_temporal').val();
     });
 
 
