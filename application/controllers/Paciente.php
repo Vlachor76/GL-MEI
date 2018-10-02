@@ -189,5 +189,20 @@ class Paciente extends CI_Controller {
         }
     }
 
+    function impresion_valoracion(){
+        $this->load->library('mydompdf');
+        $nro_identidad =  $_REQUEST["ndoc"];
+        $tipodoc =  $_REQUEST["tipodoc"];
+        $fecha_date = new DateTime();
+        $data["fecha"] = $fecha_date;
+        $data["empresa"] = $this->administracion_model->get_datos_empresa();
+        $data["paciente"] = $this->paciente_model->get_paciente($nro_identidad,$tipodoc);
+        $html = $this->load->view('aplicacion/pdf/valoracion_pdf', $data, true);
+        $this->mydompdf->load_html($html);
+        $this->mydompdf->render();
+        $this->mydompdf->stream("Valoracion_".$nro_identidad.".pdf", array("Attachment" => false));     
+    }
+
+
 
 }

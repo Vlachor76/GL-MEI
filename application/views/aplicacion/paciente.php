@@ -166,7 +166,7 @@
 					<h4 class="modal-title">Valoracion</h4>
 				</div>
 				<div class="modal-body">
-				<div align="center" >		
+				<div aling="center" >		
                     <div class="form-group">
 					    <label for="email">Procedimientos Generales</label>
                         <textarea class="form-control" rows="6" id="descripcionValoracion"></textarea>
@@ -175,7 +175,7 @@
 				   <div class="row" style="width: 80%;">
 				        <div class="form-group">						
 								<button type="button"  id="guardarValoracion" title="Guardar Valoracion"  class="botonesModal icon-save"></button>
-								<button type="button" title="Imprimir Valoracion"  class="botonesModal icon-printer"></button>	
+								<button type="button" title="Imprimir Valoracion" onclick="imprimir_valoracion();" class="botonesModal icon-printer"></button>	
 						</div>	
 				   </div>
 				</div>			

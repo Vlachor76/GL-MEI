@@ -380,6 +380,11 @@ function buscarPaciente(){
     });
 }
 
+function imprimir_valoracion(){
+    var ndoc = $("#ndoc").val();
+    var tipodoc = $("#tipoDoc").val();
+    window.open("./paciente/impresion_valoracion?ndoc="+ndoc+"&tipodoc="+tipodoc, '_blank');
+}
 
 
 
